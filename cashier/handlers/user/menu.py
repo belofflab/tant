@@ -686,15 +686,10 @@ async def control_amount(message: types.Message, state: FSMContext) -> None:
         message_id=last_message_id.get("last_message_id"),
     )
 
-    worker_name = "@username"
-    try:
-        if new_lead_data.get('worker') is not None:
-            worker_name = new_lead_data.get('username')
-    except Exception as e:
-        print(e)
+    print(new_lead_data['worker']['username'])
     await bot.send_photo(
         chat_id=CHANNEL_ID,
-        caption=f"<b>Новая заявка на пополнение</b>\n\nРаботник: @{worker_name}\nСумма: {new_lead_data.get('amount')}₽",
+        caption=f"<b>Новая заявка на пополнение</b>\n\nРаботник: @123\nСумма: {new_lead_data.get('amount')}₽",
         photo=types.InputFile(output_file),
         reply_markup=await inline.confirm_deposit_request_keyboard(
             new_lead_data.get("id")
