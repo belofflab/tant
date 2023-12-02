@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Аналитика</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
+        integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+        }
+        .totalUsersDiagram {
+            display: flex;
+            justify-content: space-evenly;
+        }
+        #workersDateRange {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
+        #workers {
+            background-color: #f9f4f4;
+            border-radius: 30px;
+            padding: 30px;
+        }
+        #users {
+            background-color: #f9f4f4;
+            border-radius: 30px;
+            padding: 30px;
+        }
+        #link {
+            background-color: #f9f4f4;
+            border-radius: 30px;
+            padding: 30px;
+
+        }
+        #worker_info {
+            padding: 30px;
+
+        }
+        #pagination {
+            position: static;
+            bottom: 10px;
+        }
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination li {
+            margin: 5px;
+        }
+        .pagination a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f4f4;
+            color: #333;
+        }
+        .pagination a:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        .pagination .arrow {
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f4f4;
+            color: #333;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .pagination a.active {
+            background-color: #000;
+            color: #fff;
+        }
+        .pagination .arrow:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        .user-detail a {
+            text-decoration: none;
+        }
+        .material-symbols-outlined {
+            font-size: 18px;
+            text-decoration: none;
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        #totalChats {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="modal fade" id="addGroupModal" tabindex="-1" role="dialog" aria-labelledby="addGroupModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Формирование группы</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="groupName">Введите название группы</label>
+                        <input type="text" class="form-control" id="groupName">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">закрыть</button>
+                    <button type="button" class="btn btn-primary" id="saveGroupButton">добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <section class="mb-4 mt-4" id="link">
+            <h5>Аналитика ссылки</h5>
+            <div class="row align-items-end">
+                <div class="col-sm-4">
+                    <div>
+                        <input type="text" id="searchWorkers" class="form-control"
+                            placeholder="Укажите ссылку работника">
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <form id="workersDateRange">
+                        <div class="form-group">
+                            <label for="startWorkerDate">Дата от:</label>
+                            <input type="date" id="startWorkerDate" name="startWorkerDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endWorkerDate">Дата до:</label>
+                            <input type="date" id="endWorkerDate" name="endWorkerDate">
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-outline-warning"
+                            id="resetWorkerDate">сбросить</button>
+                    </form>
+                </div>
+            </div>
+            <div id="worker_info"></div>
+
+        </section>
+        <section class="mb-4" id="workers">
+            <h5>Аналитика воркеров</h5>
+            <span id="errorBox" style="color: red;"></span>
+            <div class="totalUsersDiagram">
+                <div class="chart">
+                    <canvas id="totalChats"></canvas>
+                </div>
+                <div class="filters">
+                    <label for="selectWorkerLabel">Выбор работника:</label>
+                    <select class="form-control" id="selectWorkerLabel" multiple></select>
+                    <form class="mt-4 mb-4" id="filterForm">
+                        <div class="form-group">
+                            <label for="startDate">Дата от:</label>
+                            <input type="date" id="startDate" name="startDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">Дата до:</label>
+                            <input type="date" id="endDate" name="endDate">
+                        </div>
+                        <div class="form-check mt-2">
+                            <input type="checkbox" class="form-check-input" id="showInactive" name="showInactive">
+                            <label class="form-check-label" for="showInactive">Показать только неактивных
+                                пользователей</label>
+                        </div>
+                        <div class="form-group mt-2">
+                            <button type="submit" class="btn btn-sm btn-outline-warning" id="resetUserDate">Показать
+                                всех пользователей</button>
+                        </div>
+                        <div class="form-group mt-2">
+                            <button style="display: none;" class="btn btn-sm btn-outline-warning"
+                                id="addGroupButton">Сформировать
+                                группу</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section id="users">
+            <h5>Пользователи входящие в диаграмму</h5>
+            <input type="text" id="searchUsers" class="form-control w-25 mt-2 mb-2" placeholder="Поиск...">
+            <div id="diagramUsers" class="row"></div>
+            <div id="pagination"></div>
+
+        </section>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        // const backendUrl = 'https://dev.belofflab.keenetic.pro/api/v1'
+        const backendUrl = 'https://tant.belofflab.com/api/v1'
+    </script>
+    <script>
+        const selectWorkerLabel = document.getElementById("selectWorkerLabel")
+        const searchWorkersInput = document.getElementById("searchWorkers");
+        const startWorkerDate = document.getElementById("startWorkerDate");
+        const endWorkerDate = document.getElementById("endWorkerDate");
+        const workerInfo = document.getElementById("worker_info");
+        const workerDateResetButton = document.getElementById("resetWorkerDate")
+        searchWorkersInput.addEventListener("input", applyWorkersFilter);
+        startWorkerDate.addEventListener("change", applyWorkersFilter);
+        endWorkerDate.addEventListener("change", applyWorkersFilter);
+        workerDateResetButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            searchWorkersInput.value = '';
+            startWorkerDate.value = '';
+            endWorkerDate.value = '';
+            applyWorkersFilter();
+        })
+        function formatPeople(num) {
+            if (num % 10 === 1 && num % 100 !== 11) {
+                return `${num} человек`;
+            } else if ([2, 3, 4].includes(num % 10) && (num % 100 < 10 || num % 100 >= 20)) {
+                return `${num} человека`;
+            } else {
+                return `${num} человек`;
+            }
+        }
+        function applyWorkersFilter() {
+            var startDate = startWorkerDate.value;
+            var endDate = endWorkerDate.value;
+
+            var url = backendUrl + "/analytics/workers/conversion/?link=" + searchWorkersInput.value
+            if (!(searchWorkersInput.value && startWorkerDate.value && endWorkerDate.value)) {
+                return workerInfo.innerHTML = "";
+            }
+            if (startDate && endDate) {
+                url += `&date_range=${startDate} ${endDate}`;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    workerInfo.innerHTML = `
+                    <p>${startDate && endDate ? 'С ' + startDate + ' до ' + endDate : ''} по ссылке ${searchWorkersInput.value}</p>
+                    <span>Перешли по ссылке: ${formatPeople(data.all_transitions)}</span> <br>
+                    <span>Нажали на кнопку: ${formatPeople(data.button_transitions)}</span><br>
+                    <span>Написали в личку: ${formatPeople(data.private_transitions)}</span><br>
+                    `;
+                });
+        }
+    </script>
+    <script>
+        const errorBox = document.getElementById("errorBox");
+        document.getElementById('addGroupButton').addEventListener('click', function (e) {
+            e.preventDefault()
+            $('#addGroupModal').modal('show');
+        });
+
+        function sendUserReq(apiPort, template_name, users) {
+            // fetch("http://127.0.0.1:" + apiPort + '/api', {
+            // fetch("http://166.1.160.208:" + apiPort, {
+            // fetch("https://aleksandra.belofflab.com/api", {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({ "template_name": template_name, "users": users })
+            // }).then(response => response.json())
+            //     .then(data => console.log(data))
+            console.log("Рассылка отключена...")
+        }
+        document.getElementById('saveGroupButton').addEventListener('click', function () {
+            $('#addGroupModal').modal('hide');
+
+            const sortedData = usersData.reduce((acc, user) => {
+                const existingEntry = acc.find(entry => entry.api_port === user.worker.api_port);
+                if (existingEntry) {
+                    existingEntry.users.push({
+                        id: user.id,
+                        username: user.username,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        is_processing: user.is_processing,
+                        last_activity: user.last_activity,
+                        first_touch: user.first_touch,
+                        worker: user.worker,
+                    });
+                } else {
+                    acc.push({
+                        api_port: user.worker.api_port,
+                        users: [{
+                            id: user.id,
+                            username: user.username,
+                            first_name: user.first_name,
+                            last_name: user.last_name,
+                            is_processing: user.is_processing,
+                            last_activity: user.last_activity,
+                            first_touch: user.first_touch,
+                            worker: user.worker,
+                        }],
+                    });
+                }
+                return acc;
+            }, []);
+            sortedData.forEach(apiPortEntry => {
+                sendUserReq(apiPortEntry.api_port, document.getElementById("groupName").value, apiPortEntry.users)
+            });
+        });
+    </script>
+    <script>
+        const pageSize = 30;
+        const paginationDiv = document.getElementById('pagination');
+        const addGroupButton = document.getElementById('addGroupButton');
+        let currentPage = 1;
+        function searchUsers() {
+            const searchQuery = document.getElementById('searchUsers').value.toLowerCase();
+            const diagramUsers = usersData.filter(user => {
+                const fullName = `         
+                    <div class="user-detail">
+                        <a target='_blank' href='https://t.me/${user.worker.username}'>
+                            ${user.worker.name}
+                        </a> |
+                        <a target='_blank' href='https://t.me/${user.username ? user.username : user.id}'>
+                            ${user.username ? user.username : user.id}
+                        </a> |
+                        <a target='_blank' href='${backendUrl}/messages/${user.worker.id}/${user.id}/'>
+                            -> 
+                        </a>
+                    </div>
+                    `.toLowerCase();
+                return fullName.includes(searchQuery);
+            });
+            updateDiagramUsers(diagramUsers);
+            if (searchQuery.length > 0) {
+                paginationDiv.innerHTML = '';
+            }
+        }
+
+        function updateDiagramUsers(users) {
+            const diagramUsersDiv = document.getElementById('diagramUsers');
+
+            diagramUsersDiv.innerHTML = '';
+
+            const paginatedUsers = paginateUsers(users, pageSize, currentPage);
+
+            displayUsers(paginatedUsers);
+
+            renderPagination(paginationDiv, users.length);
+        }
+
+        function paginateUsers(users, pageSize, page) {
+            const startIndex = (page - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+            return users.slice(startIndex, endIndex);
+        }
+
+        function renderPagination(paginationDiv, totalUsers) {
+            const totalPages = Math.ceil(totalUsers / pageSize);
+            paginationDiv.innerHTML = '';
+
+            const ul = document.createElement('ul');
+            ul.classList.add('pagination');
+
+            const prevArrow = document.createElement('li');
+            prevArrow.classList.add('arrow');
+            prevArrow.textContent = '←';
+            prevArrow.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateDiagramUsers(usersData);
+                }
+            });
+            ul.appendChild(prevArrow);
+
+            const maxPagesToShow = 5;
+            const halfMaxPages = Math.floor(maxPagesToShow / 2);
+
+            let startPage = 1;
+            let endPage = totalPages;
+
+            if (totalPages > maxPagesToShow) {
+                if (currentPage <= halfMaxPages) {
+                    endPage = maxPagesToShow;
+                } else if (currentPage >= totalPages - halfMaxPages) {
+                    startPage = totalPages - maxPagesToShow + 1;
+                } else {
+                    startPage = currentPage - halfMaxPages;
+                    endPage = currentPage + halfMaxPages;
+                }
+            }
+            for (let i = startPage; i <= endPage; i++) {
+                const li = document.createElement('li');
+                const pageLink = document.createElement('a');
+                pageLink.textContent = i;
+
+                if (i === currentPage) {
+                    pageLink.classList.add('active');
+                }
+
+                pageLink.addEventListener('click', () => {
+                    currentPage = i;
+                    updateDiagramUsers(usersData);
+                });
+
+                li.appendChild(pageLink);
+                ul.appendChild(li);
+            }
+
+            const nextArrow = document.createElement('li');
+            nextArrow.classList.add('arrow');
+            nextArrow.textContent = '→';
+            nextArrow.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updateDiagramUsers(usersData);
+                }
+            });
+            ul.appendChild(nextArrow);
+
+            paginationDiv.appendChild(ul);
+        }
+        function displayUsers(users) {
+            const diagramUsersDiv = document.getElementById('diagramUsers');
+            const halfPage = pageSize / 2;
+
+            const leftUsers = users.slice(0, halfPage);
+            const rightUsers = users.slice(halfPage, pageSize);
+
+            const leftRow = document.createElement('div');
+            leftRow.classList.add('col-6');
+            const rightRow = document.createElement('div');
+            rightRow.classList.add('col-6');
+
+            function createUserElement(user) {
+                const userElement = document.createElement('div');
+                userElement.innerHTML = `
+                    <div class="user-detail">
+                        <a target='_blank' href='https://t.me/${user.worker.username}'>
+                            ${user.worker.name}
+                        </a> |
+                        <a target='_blank' href='https://t.me/${user.username ? user.username : user.id}'>
+                            ${user.username ? user.username : user.id}
+                        </a> |
+                        <a target='_blank' href='${backendUrl}/messages/${user.worker.id}/${user.id}/'>
+                            -> 
+                        </a>
+                    </div>
+                    `;
+                return userElement;
+            }
+            leftUsers.forEach(user => {
+                const userElement = createUserElement(user);
+                leftRow.appendChild(userElement);
+            });
+            rightUsers.forEach(user => {
+                const userElement = createUserElement(user);
+                rightRow.appendChild(userElement);
+            });
+            diagramUsersDiv.appendChild(leftRow);
+            diagramUsersDiv.appendChild(rightRow);
+        }
+
+        const searchUsersInput = document.getElementById('searchUsers');
+        searchUsersInput.addEventListener('input', searchUsers);
+
+    </script>
+
+    <script>
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        const currentDate = new Date();
+        selectedWorkers = [];
+        document.getElementById('startDate').value = formatDate(currentDate);
+        document.getElementById('endDate').value = formatDate(currentDate);
+
+        document.getElementById('startDate').addEventListener('input', applyFilters);
+        document.getElementById('endDate').addEventListener('input', applyFilters);
+        document.getElementById('showInactive').addEventListener('change', applyFilters);
+        selectWorkerLabel.addEventListener('change', function() {
+            // Обновляем массив selectedWorkers при изменении выбора в select
+            selectedWorkers = Array.from(selectWorkerLabel.selectedOptions).map(option => option.text);
+            Array.from(selectWorkerLabel.selectedOptions).forEach((worker) => {
+                worker.setAttribute('selected', true);
+            })
+            applyFilters();
+        });
+        const resetUserDate = document.getElementById("resetUserDate");
+        resetUserDate.addEventListener("click", (e) => {
+            e.preventDefault();
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            applyFilters();
+        })
+        var totalChatsCanvas = document.getElementById('totalChats');
+        var totalChats = document.getElementById('totalChats').getContext('2d');
+        var xCoor = 0;
+        var yCoor = 0;
+        var chartCenterText = '';
+        var usersData = [];
+        const doughnutLabel = {
+            id: "doughnutLabel",
+            afterDraw(chart, args, pluginOptions) {
+                const { ctx, data } = chart;
+                ctx.save()
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle'
+                ctx.fillText(chartCenterText, xCoor, yCoor);
+            }
+        }
+        let selectedDatasetIndex = undefined;
+        let selectedIndex = undefined;
+
+        const clickLabel = {
+            id: "clickLabel",
+            afterDraw(chart, args, pluginOptions) {
+                const event = args.event;
+                const { ctx, chartArea: { width, height, top } } = chart;
+                if (selectedDatasetIndex >= 0) {
+                    const value = chart._metasets[selectedDatasetIndex]._parsed[selectedIndex];
+                    ctx.save()
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                }
+            }
+        }
+        const totalChatsChart = new Chart(totalChats, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: [],
+                }]
+            },
+            options: {
+                    plugins: {
+                        legend: {
+                            display: false
+                    },
+                },
+                onHover(click, element, chart) {
+                    if (element[0]) {
+                        selectedDatasetIndex = element[0].datasetIndex;
+                        selectedIndex = element[0].index;
+                        chart.draw();
+                    }
+                }
+            },
+            plugins: [doughnutLabel, clickLabel]
+        });
+
+        function updateTotalChatsChart(data) {
+            usersData = data;
+            var colors = generatePastelColors(data.length);
+            var processedData = processData(usersData);
+            selectWorkerLabel.innerHTML = "";
+            for (var i = 0; i < processedData.labels.length; i++) {
+                var option = document.createElement("option");
+                option.text = processedData.labels[i];
+                option.value = processedData.values[i];
+                if (selectedWorkers.includes(processedData.labels[i])) {
+                    option.selected = true;
+                }
+                selectWorkerLabel.appendChild(option);
+            }
+            newFilteredData = reProcessData(processedData);
+            let total = 0;
+            for (let i = 0; i < newFilteredData.values.length; i++) {
+                total += newFilteredData.values[i];
+            }
+            totalChatsChart.data.labels = newFilteredData.labels;
+            totalChatsChart.data.datasets[0].data = newFilteredData.values;
+            totalChatsChart.data.datasets[0].backgroundColor = colors;
+
+            totalChatsChart.update();
+            
+            xCoor = totalChatsChart.chartArea.left + totalChatsChart.chartArea.width / 2;
+            yCoor = totalChatsChart.chartArea.top + totalChatsChart.chartArea.height / 2;
+            if (total > 0) {
+                chartCenterText = `Всего: ${total}`;
+            } else {
+                chartCenterText = '';
+            }
+
+            var diagramUsersElement = document.getElementById('diagramUsers');
+            diagramUsersElement.innerHTML = '';
+            updateDiagramUsers(usersData)
+        }
+
+
+        function generatePastelColors(count) {
+            var colors = [];
+            for (var i = 0; i < count; i++) {
+                var r = Math.floor(Math.random() * 200 + 55);
+                var g = Math.floor(Math.random() * 200 + 55);
+                var b = Math.floor(Math.random() * 200 + 55);
+                var color = 'rgb(' + r + ',' + g + ',' + b + ')';
+                colors.push(color);
+            }
+            return colors;
+        }
+        function processData(data) {
+            var counts = {};
+            data.forEach(item => {
+                if (item.worker != null) {
+                    var uid = `${item.worker?.name} (${item.worker?.id})`;
+                    counts[uid] = counts[uid] ? counts[uid] + 1 : 1;
+                    
+                }
+            });
+            var labels = Object.keys(counts);
+            var values = Object.values(counts);
+
+            return { labels, values };
+        }
+        function reProcessData(oldData){
+            var counts = {}
+            for (let i = 0; i < oldData.labels.length; i++) {
+                var label = oldData.labels[i];
+                var value = oldData.values[i];
+                if (!selectedWorkers.includes(label)) {
+                    counts[label] = value;
+                }
+            }
+            var labels = Object.keys(counts);
+            var values = Object.values(counts);
+            return { labels, values };
+        }
+        function applyFilters() {
+            currentPage = 1;
+            var startDate = document.getElementById('startDate').value;
+            var endDate = document.getElementById('endDate').value;
+            var showInactive = document.getElementById('showInactive').checked;
+
+            var url = backendUrl + "/analytics/chats/total/";
+            var transactionsUrl = backendUrl + '/transactions/';
+
+            if (startDate && endDate) {
+                url += `?date_range=${startDate} ${endDate}`;
+                transactionsUrl += `?date_range=${startDate} ${endDate}`;
+            }
+
+            if (showInactive) {
+                if (startDate && endDate) {
+                    url += `&`;
+                } else {
+                    url += `?`;
+                }
+                url += `disactive=true`;
+            }
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        addGroupButton.style.display = 'block';
+                    }
+                    updateTotalChatsChart(data)
+                });
+        }
+        applyFilters()
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+[Unit]
+Description=Tarologue service
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/home/tarologue
+ExecStart=/home/tarologue/venv/bin/python bot.py
+[Install]
+WantedBy=multi-user.target

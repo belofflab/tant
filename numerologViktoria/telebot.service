@@ -1,0 +1,11 @@
+[Unit]
+Description=Numerolog service
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/home/numerolog
+ExecStart=/home/numerolog/venv/bin/python bot.py
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История сообщений</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .from {
+            text-align: left;
+        }
+
+        .to {
+            text-align: right;
+        }
+        #chat {
+            margin: 0 auto;
+            max-width: 450px;
+            height: 600px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="chat">
+            <h5>
+                История сообщений 
+                {% if receiver.username %}
+                    @{{receiver.username}}
+                {% else %}
+                    @{{receiver.id}}
+                {% endif %}
+            </h5>
+            <ul class="list-unstyled mt-3">
+                {% for message in messages %}
+                {% if message.sender.id == sender.id %}
+                <li class="message from alert alert-success">
+                    <strong>
+                        {% if sender.first_name %}
+                            {{ sender.first_name }}
+                        {% endif %} 
+                        {% if sender.last_name %} 
+                            {{ sender.last_name }}
+                        {% endif %}
+                    </strong>
+                    <br>
+                    <small>Кому: 
+                        {% if sender.username %} 
+                            {{ sender.username }}
+                        {% else %}
+                            {{ sender.id }}
+                        {% endif %}
+                    </small>
+                    <br>
+                    <small>Дата: {{ message.date }}</small><br>
+                    {{ message.text }}
+                </li>
+                {% else %}
+                <li class="message to alert alert-info">
+                    <strong>
+                        {% if receiver.first_name %}
+                            {{ receiver.first_name }}
+                        {% endif %} 
+                        {% if receiver.last_name %} 
+                            {{ receiver.last_name }}
+                        {% endif %}
+                    </strong><br>
+                    <small>Кому: 
+                        {% if receiver.username %} 
+                            {{ receiver.username }}
+                        {% else %}
+                            {{ receiver.id }}
+                        {% endif %}
+                    </small><br>
+                    <small>Дата: {{ message.date }}</small><br>
+                    {{ message.text }}
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#chat").animate({ scrollTop: $("#chat")[0].scrollHeight }, 1000);
+        });
+    </script>
+</body>
+
+</html>

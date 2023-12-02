@@ -1,0 +1,5 @@
+pyrogram
+tgcrypto
+python-dotenv
+requests
+aiogram==2.21

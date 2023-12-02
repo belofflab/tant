@@ -1,0 +1,7 @@
+uvicorn
+fastapi
+arsenic 
+Pillow
+bs4
+lxml
+requests
