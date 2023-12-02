@@ -52,6 +52,7 @@ async def create(
         )
 
     marginal_amount = float(worker_request.amount) * (worker.comission / 100)
+    print(marginal_amount)
 
     return await WorkerRequest.objects.create(
         worker=worker,
