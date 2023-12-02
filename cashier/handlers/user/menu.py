@@ -655,14 +655,12 @@ async def control_amount(message: types.Message, state: FSMContext) -> None:
         await photo[-1].download(destination_file=output_file)
         photo_to_delete = output_file
     params = {"worker": message.from_user.id, "amount": str(amount), "type": "deposit"}
-    new_lead_status = False
     new_lead_data = {}
     with open(output_file, "rb") as file:
         new_lead_response = requests.post(
             SERVER_URL + f"/worker/requests/", params=params, files={"receipt": file}
         )
         if new_lead_response.status_code == 200:
-            new_lead_status = True
             new_lead_data = new_lead_response.json()
         else:
             return await bot.edit_message_text(
@@ -671,8 +669,6 @@ async def control_amount(message: types.Message, state: FSMContext) -> None:
             reply_markup=await inline.worker_receipt_keyboard(),
             message_id=last_message_id.get("last_message_id"),
         )
-
-    await bot.send_message(875044476, str(new_lead_data))
     
     await message.delete()
     SUCCESS_MESSAGE = (
