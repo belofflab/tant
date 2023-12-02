@@ -685,16 +685,28 @@ async def control_amount(message: types.Message, state: FSMContext) -> None:
         reply_markup=await inline.worker_receipt_keyboard(),
         message_id=last_message_id.get("last_message_id"),
     )
+    try:
+        await bot.send_photo(
+            chat_id=CHANNEL_ID,
+            caption=f"<b>Новая заявка на пополнение</b>\n\nРаботник: @{new_lead_data['worker']['username']}\nСумма: {new_lead_data.get('amount')}₽",
+            photo=types.InputFile(output_file),
+            reply_markup=await inline.confirm_deposit_request_keyboard(
+                new_lead_data.get("id")
+            ),
+        )
+    except Exception as e:
+        text=f"<b>Возникла ошибка сервера при создании заявки, попробуйте ещё раз или свяжитесь с @belofflab...</b>\nКод ошибки: ({e})\n\nДля выхода жмите 'назад'",
+        await bot.send_message(
+            chat_id=message.from_user.id,
+            text=text,
+            reply_markup=await inline.worker_receipt_keyboard(),
+        )
+        await bot.send_message(
+            chat_id=CHANNEL_ID,
+            text=text
+        )
 
-    print(new_lead_data['worker']['username'])
-    await bot.send_photo(
-        chat_id=CHANNEL_ID,
-        caption=f"<b>Новая заявка на пополнение</b>\n\nРаботник: @123\nСумма: {new_lead_data.get('amount')}₽",
-        photo=types.InputFile(output_file),
-        reply_markup=await inline.confirm_deposit_request_keyboard(
-            new_lead_data.get("id")
-        ),
-    )
+
 
     os.remove(photo_to_delete)
 
