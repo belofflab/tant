@@ -236,7 +236,16 @@ async def start(message: t.Union[types.Message, types.CallbackQuery], **kwargs) 
 
 Ваш баланс: <b>{data.get("amount")}₽</b>
 Замороженный баланс: <b>{data.get('freezed_amount')}₽</b>
-    """,
+
+Реквизиты для оплаты:
+
+"""
+            + "\n".join(
+                [
+                    f"<b>{payment_detail.get('name')}</b> : <code>{payment_detail.get('text')}</code>"
+                    for payment_detail in payment_details
+                ]
+            ),
             reply_markup=await inline.worker_menu_keyboard(),
         )
 
