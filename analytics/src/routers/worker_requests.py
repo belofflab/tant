@@ -51,7 +51,7 @@ async def create(
             type=worker_request.type,
         )
 
-    marginal_amount = float(worker_request.amount) * (worker.comission / 100)
+    marginal_amount = round(float(worker_request.amount) * (worker.comission / 100), 2)
     print(marginal_amount)
 
     return await WorkerRequest.objects.create(
