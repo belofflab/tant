@@ -15,6 +15,10 @@ askeza_cd = CallbackData(
     "show_askeza", "level", "worker", "content_type", "content_page"
 )
 
+training_cd = CallbackData(
+    "show_training", "level", "worker", "tid"
+)
+
 
 def make_service_cd(level, worker="viktoria_numer", type="0", service="0"):
     return service_cd.new(level=level, worker=worker, type=type, service=service)
@@ -42,6 +46,9 @@ def make_askeza_cd(level, worker="0", content_type="0", content_page="1"):
     return askeza_cd.new(
         level=level, worker=worker, content_type=content_type, content_page=content_page
     )
+
+def make_training_cd(level, worker="0", tid="0"):
+    return training_cd.new(level=level, worker=worker, tid=tid)
 
 
 async def free_markup(worker: str) -> InlineKeyboardMarkup:
@@ -72,13 +79,17 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
             "callback_data": make_service_cd(level=CURRENT_LEVEL + 1, worker=worker),
         },
         {
+            "text": "Обучение 🔥",
+            "callback_data": make_training_cd(level=CURRENT_LEVEL + 1, worker=worker)
+        },
+        {
             "text": "Прогноз 2024 (БОНУС)",
             "callback_data": f"s2024#{worker}",
         },
-        {
-            "text": "Матрица пифагора 🧠",
-            "callback_data": make_matrix_cd(level=CURRENT_LEVEL + 1, worker=worker),
-        },
+        # {
+        #     "text": "Матрица пифагора 🧠",
+        #     "callback_data": make_matrix_cd(level=CURRENT_LEVEL + 1, worker=worker),
+        # },
         {"text": "Канал с практиками 📣", "url": "https://t.me/praktiki_na_zhelania"},
         {"text": "Чат общения 👥", "url": "https://t.me/obschenie_kanal"},
         {"text": "Связаться со мной 📩", "url": "https://t.me/viktoria_numer"},

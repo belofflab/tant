@@ -83,3 +83,22 @@ class UserUserTemplateAssociation(db.Model):
     
     user_template_id: int = Column(ForeignKey("user_templates.idx"))
     user_id: int = Column(ForeignKey("users.idx"))
+
+class Training(db.Model):
+    __tablename__ = "trainings"
+    idx: int = Column(BigInteger, Sequence("trainings_idx_seq"), primary_key=True)
+    name: str = Column(String(255))
+    description: str = Column(String)
+    price: Decimal = Column(Numeric(12,2))
+    is_visible: bool = Column(Boolean, default=True)
+
+class TaroTraining(db.Model):
+    __tablename__ = "taro_trainings"
+    idx: int = Column(BigInteger, Sequence("taro_trainings_idx_seq"), primary_key=True)
+    training: Training = Column(ForeignKey("trainings.idx"))
+    user: User = Column(ForeignKey("users.idx"))
+    is_banned = Column(Boolean, default=False)
+    start_date: datetime.datetime = Column(DateTime, default=datetime.datetime.now)
+    end_date: datetime.datetime = Column(
+        DateTime, default=lambda: datetime.datetime.now() + datetime.timedelta(days=90)
+    )

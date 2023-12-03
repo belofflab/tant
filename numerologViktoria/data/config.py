@@ -15,6 +15,7 @@ if os.path.exists(ENV_FILE):
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 DATABASE_URL = os.getenv("DATABASE_URL")
 CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
+TRAINING_CHANNEL = int(os.getenv("TRAINING_CHANNEL"))
 ADMIN_IDS = os.getenv("ADMIN_IDS").split()
 SERVER_URL = os.getenv("SERVER_URL")
 QIWI_BILL_LIFETIME = int(os.getenv("QIWI_BILL_LIFETIME"))
