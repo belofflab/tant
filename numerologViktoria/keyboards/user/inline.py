@@ -274,7 +274,7 @@ async def show_service(
         InlineKeyboardButton(
             text=whatsapp_button,
             url="https://api.whatsapp.com/send/?phone=79292084866&text=Привет!+Хочу+{text}&type=phone_number&app_absent=0?".format(
-                text=q_service.name.replace("«", "").replace("»", "").replace(" ", "+") + " за " + str(q_service.price) + "₽"
+                text=q_service.name.replace("«", "").replace("»", "").replace(" ", "+") + " за " + str(q_service.amount) + "₽"
             ),
         ),
         InlineKeyboardButton(
