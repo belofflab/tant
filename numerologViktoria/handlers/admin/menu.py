@@ -72,7 +72,7 @@ async def setup(message: types.Message) -> None:
 Стоимость «2000-3500₽»
 В зависимости от вопросов.
 """,
-    "amount": "0",
+    "amount": "2000",
         },
         {
             "name": "Предназначение",
