@@ -186,11 +186,34 @@ async def get_or_create_user(user_id: int, username: str) -> models.User:
         idx=user_id, username=username if username is not None else "no username"
     )
 
+async def proceed_signin(message):
+    await get_or_create_user(
+                user_id=message.from_user.id, username=message.from_user.username
+            )
+    requests.post(
+        url=SERVER_URL + f"/users/?worker_name=valentina_numerologEnerg",
+        headers={
+            "accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        json={
+            "id": message.from_user.id,
+            "username": message.from_user.username,
+            "first_name": "FROM",
+            "last_name": "BOT",
+            "worker": 9,
+        },
+    )
+
 
 @dp.message_handler(commands="start")
 async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) -> None:
+    from .askeza import list_buttons
     if isinstance(message, types.Message):
         account = message.get_args()
+        if account == "askeza":
+            await proceed_signin(message=message)
+            return await list_buttons(callback=message, worker="valentina_numerologEnerg")
         if account not in ["valentina_numerologEnerg",]:
             account = "valentina_numerologEnerg"
         await get_or_create_user(
