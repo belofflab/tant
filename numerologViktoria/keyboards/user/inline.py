@@ -72,7 +72,7 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
             "callback_data": make_service_cd(level=CURRENT_LEVEL + 1, worker=worker),
         },
         {
-            "text": "Прогноз 2024",
+            "text": "Прогноз 2024 (БОНУС)",
             "callback_data": f"s2024#{worker}",
         },
         {
