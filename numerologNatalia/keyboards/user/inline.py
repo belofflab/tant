@@ -82,6 +82,7 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
         {"text": "🌟 Мой канал", "url": "https://t.me/numero_logica"},
         {"text": "❓Вопросы лично 🧚‍♀", "url": "https://t.me/Natali_numerologist"},
         {"text": "🍀 Бонусы", "callback_data": f"bonus#{worker}"},
+        {"text": "ХОЧУ В КОМАНДУ", "callback_data": f"wanttoteam#{worker}"},
     ]
     for button in buttons:
         markup.row(InlineKeyboardButton(**button))

@@ -43,6 +43,7 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
             "callback_data": make_service_cd(level=CURRENT_LEVEL + 1, worker=worker),
         },
         {"text": "Телеграм канал", "url": "https://t.me/tvoi_klych_k_sebe"},
+        {"text": "ХОЧУ В КОМАНДУ", "callback_data": f"wanttoteam#{worker}"},
     ]
     for button in buttons:
         markup.row(InlineKeyboardButton(**button))

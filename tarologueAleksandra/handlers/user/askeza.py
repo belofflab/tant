@@ -2,6 +2,7 @@ from aiogram import types
 from keyboards.user import inline
 from loader import dp
 from .menu import start
+from typing import Union
 from data.config import ASKEZA
 WORKER_NAME = "Александре"
 WORKER_USERNAME = "sasha_tarolog"
@@ -132,28 +133,50 @@ ASKEZA_DESCRIPTION = """
 """
 
 
-async def list_buttons(callback: types.CallbackQuery, worker: str, **kwargs):
-    await callback.message.edit_media(
-        media=types.InputMediaPhoto(
-            media=types.InputFile(ASKEZA),
-            caption=ASKEZA_DESCRIPTION
-        ),
-        reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
-            *[
+async def list_buttons(
+    callback: Union[types.CallbackQuery, types.Message], worker: str, **kwargs
+):
+    if isinstance(callback, types.CallbackQuery):
+        await callback.message.edit_media(
+            media=types.InputMediaPhoto(
+                media=types.InputFile(ASKEZA), caption=ASKEZA_DESCRIPTION
+            ),
+            reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
+                *[
+                    types.InlineKeyboardButton(
+                        text=value["text"],
+                        callback_data=inline.make_askeza_cd(
+                            level=2, worker=worker, content_type=key
+                        ),
+                    )
+                    for key, value in askeza_buttons.items()
+                ],
                 types.InlineKeyboardButton(
-                    text=value["text"],
-                    callback_data=inline.make_askeza_cd(
-                        level=2, worker=worker, content_type=key
-                    ),
-                )
-                for key, value in askeza_buttons.items()
-            ],
-            types.InlineKeyboardButton(
-                text="Назад",
-                callback_data=inline.make_askeza_cd(level=0, worker=worker),
-            )
-        ),
-    )
+                    text="Назад",
+                    callback_data=inline.make_askeza_cd(level=0, worker=worker),
+                ),
+            ),
+        )
+    elif isinstance(callback, types.Message):
+        await callback.answer_photo(
+            photo=types.InputFile(ASKEZA),
+            caption=ASKEZA_DESCRIPTION,
+            reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
+                *[
+                    types.InlineKeyboardButton(
+                        text=value["text"],
+                        callback_data=inline.make_askeza_cd(
+                            level=2, worker=worker, content_type=key
+                        ),
+                    )
+                    for key, value in askeza_buttons.items()
+                ],
+                types.InlineKeyboardButton(
+                    text="Назад",
+                    callback_data=inline.make_askeza_cd(level=0, worker=worker),
+                ),
+            ),
+        )
 
 
 async def show_button(

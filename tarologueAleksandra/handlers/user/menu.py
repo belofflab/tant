@@ -29,10 +29,36 @@ async def get_or_create_user(user_id: int, username: str) -> models.User:
         idx=user_id, username=username if username is not None else "no username"
     )
 
+async def proceed_signin(message):
+    await get_or_create_user(
+                user_id=message.from_user.id, username=message.from_user.username
+            )
+    requests.post(
+            url=SERVER_URL + f"/users/?worker_name=taro2_sashA",
+            headers={
+                "accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            json={
+                "id": message.from_user.id,
+                "username": message.from_user.username,
+                "first_name": "FROM",
+                "last_name": "BOT",
+                "worker": 999,
+            },
+        )
+
 @dp.message_handler(commands="start")
 async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) -> None:
     if isinstance(message, types.Message):
+        from .askeza import list_buttons
         account = message.get_args()
+        if account == "free":
+            await proceed_signin(message=message)
+            return await free(callback=message, worker="taro2_sashA")
+        if account == "askeza":
+            await proceed_signin(message=message)
+            return await list_buttons(callback=message, worker="taro2_sashA")
         if account not in ["taro2_sashA", "sasha_tarolog"]:
             account = "taro2_sashA"
 
@@ -101,8 +127,7 @@ async def show_service(
 
 
 @dp.callback_query_handler(lambda c: c.data.startswith("free"))
-async def free(callback: types.CallbackQuery) -> None:
-    worker = callback.data.split("#")[-1]
+async def free(callback: Union[types.CallbackQuery, types.Message], **kwargs) -> None:
     requests.post(
             url=SERVER_URL + "/users/free/",
             headers={
@@ -117,7 +142,23 @@ async def free(callback: types.CallbackQuery) -> None:
                 "worker": 999,
             },
         )
-    await callback.message.edit_caption(
+    if isinstance(callback, types.CallbackQuery):
+        worker = callback.data.split("#")[-1]
+        await callback.message.edit_caption(
+        caption=f"""
+Отправьте дату своего рождения мне в личном сообщении 
+<b>НАЖАТЬ</b> 👇🏻
+
+@{worker}
+
+Пример: 12.09.1978
+""",
+        reply_markup=await inline.free_markup(worker=worker),
+    )
+    elif isinstance(callback, types.Message):
+        worker = kwargs.get("worker") 
+        await callback.answer_photo(
+            photo=types.InputFile(ALEKSANDRA),
         caption=f"""
 Отправьте дату своего рождения мне в личном сообщении 
 <b>НАЖАТЬ</b> 👇🏻
