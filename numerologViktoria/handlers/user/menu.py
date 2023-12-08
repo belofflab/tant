@@ -216,6 +216,14 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
     from .askeza import list_buttons
     if isinstance(message, types.Message):
         account = message.get_args()
+        try:
+            service_idx = int(account)
+            is_service = await models.Service.query.where(models.Service.idx == service_idx).gino.first()
+            if is_service is not None:
+                await proceed_signin(message=message)
+                return await show_service(callback=message, service_type="1", service=is_service.idx, worker="viktoria_numer")
+        except ValueError:
+            pass
         if account == "askeza":
             await proceed_signin(message=message)
             return await list_buttons(callback=message, worker="viktoria_numer")
@@ -736,7 +744,7 @@ async def list_services(
 
 
 async def show_service(
-    callback: types.CallbackQuery, service_type: str, service: str, worker: str
+    callback: Union[types.CallbackQuery, types.Message], service_type: str, service: str, worker: str
 ) -> None:
     markup = await inline.show_service(
         service=service, service_type=service_type, worker=worker
@@ -745,13 +753,23 @@ async def show_service(
         models.Service.idx == int(service)
     ).gino.first()
 
-    await callback.message.edit_caption(
+    if isinstance(callback, types.CallbackQuery):
+        await callback.message.edit_caption(
         caption=f"""
 {q_service.description.format(worker=worker)}
 {f"Стоимость: <i>{int(q_service.amount)}₽</i> " if  q_service.amount > 0 else ''}
 """,
         reply_markup=markup,
     )
+    elif isinstance(callback, types.Message):
+     await callback.answer_photo(
+         photo=types.InputFile(VIKTORIA),
+        caption=f"""
+{q_service.description.format(worker=worker)}
+{f"Стоимость: <i>{int(q_service.amount)}₽</i> " if  q_service.amount > 0 else ''}
+""",
+        reply_markup=markup,
+    )   
 
 
 @dp.callback_query_handler(lambda c: c.data.startswith("free"))
