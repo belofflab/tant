@@ -217,12 +217,15 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
     if isinstance(message, types.Message):
         account = message.get_args()
         try:
-            service_idx = int(account)
-            is_service = await models.Service.query.where(models.Service.idx == service_idx).gino.first()
+            services = {
+                "fincode": "6️⃣ Финансовый код"
+            }
+            # service_idx = int(account)
+            is_service = await models.Service.query.where(models.Service.name == services[account]).gino.first()
             if is_service is not None:
                 await proceed_signin(message=message)
                 return await show_service(callback=message, service_type="1", service=is_service.idx, worker="viktoria_numer")
-        except ValueError:
+        except (ValueError, KeyError):
             pass
         if account == "askeza":
             await proceed_signin(message=message)
