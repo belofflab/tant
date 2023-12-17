@@ -310,7 +310,8 @@ async def admin_menu(message: types.Message) -> None:
     await message.answer(
         f"""
 Доступное меню: 
-Сейчас пользователей: {len(users)}
+Всего пользователей: {len(users)}
+Неактивные пользователи {len([user for user in users if not user.is_active])}
 """,
         reply_markup=markup,
     )
