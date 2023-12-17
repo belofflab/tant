@@ -186,6 +186,9 @@ relationships = {
 async def get_or_create_user(user_id: int, username: str) -> models.User:
     user = await models.User.query.where(models.User.idx == user_id).gino.first()
     if user is not None:
+        await models.User.update.values(is_active=False).where(
+                models.User.idx == user.idx
+            ).gino.status()
         return user
     return await models.User.create(
         idx=user_id, username=username if username is not None else "no username"
