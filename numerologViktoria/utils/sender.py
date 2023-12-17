@@ -74,12 +74,10 @@ async def go(photo: str, text: str, buttons: str, users: list):
                 text=text,
                 buttons=buttons
             )
-        except exceptions.BotBlocked:
+        except (exceptions.BotBlocked, exceptions.ChatNotFound):
             await models.User.update.values(is_active=False).where(
                 models.User.idx == user.idx
             ).gino.status()
-        except exceptions.ChatNotFound:
-            print(f"Chat not found for user {user.idx}")
         except exceptions.RetryAfter as e:
             print(f"RetryAfter exception for user {user.idx}. Retry after {e.timeout} seconds.")
         except Exception as ex:
