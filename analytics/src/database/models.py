@@ -78,7 +78,9 @@ class Message(ormar.Model):
   id: int = ormar.Integer(primary_key=True)
   sender: User = ormar.ForeignKey(User, related_name="sender")
   receiver: User = ormar.ForeignKey(User, related_name="receiver")
-  text: str = ormar.String(max_length=2048)
+  text: str = ormar.String(max_length=2048, nullable=True)
+  photo: str = ormar.String(max_length=2048, nullable=True)
+  voice: str = ormar.String(max_length=2048, nullable=True)
   date: datetime.datetime = ormar.DateTime(default=datetime.datetime.now)
 
 class WorkerRequest(ormar.Model):

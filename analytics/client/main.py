@@ -1,10 +1,11 @@
 import asyncio
 import sys
+from uuid import uuid4
 import requests
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.enums import ChatType
-from data.config import SERVER_URL
+from data.config import SERVER_URL, BASE_DIR
 from aiogram import Bot, types
 
 bot = Bot(token="6376476195:AAF1QYb3UQchzMcI3sQXZMxpVfpVnmES9j0")
@@ -21,8 +22,92 @@ async def handle_messages(client: Client):
     await client.start()
     me = await client.get_me()
 
+    async def download_voice(client: Client, message: Message):
+        file_extension = message.voice.mime_type.split("/")[-1]
+        file_path = f"media/voices/{uuid4()}.{file_extension}"
+        await client.download_media(message, file_name=f"{BASE_DIR.parent}/{file_path}")
+        return file_path
+
+    async def download_photo(client: Client, message: Message):
+        file_path = f"media/photos/{uuid4()}.png"
+        await client.download_media(message, file_name=f"{BASE_DIR.parent}/{file_path}")
+        return file_path
+
+    async def proceed_message(client: Client, message: Message):
+        if message.text:
+            if me.id == message.from_user.id:
+                json_data = {
+                    "sender": me.id,
+                    "receiver": message.chat.id,
+                    "text": message.text,
+                }
+            else:
+                json_data = {
+                    "sender": message.chat.id,
+                    "receiver": me.id,
+                    "text": message.text,
+                }
+        elif message.caption:
+            photo_path = await download_photo(client=client, message=message)
+            if me.id == message.from_user.id:
+                json_data = {
+                    "sender": me.id,
+                    "receiver": message.chat.id,
+                    "text": message.caption,
+                    "photo": photo_path,
+                }
+            else:
+                json_data = {
+                    "sender": message.chat.id,
+                    "receiver": me.id,
+                    "text": message.caption,
+                    "photo": photo_path,
+                }
+        elif message.photo:
+            photo_path = await download_photo(client=client, message=message)
+            if me.id == message.from_user.id:
+                json_data = {
+                    "sender": me.id,
+                    "receiver": message.chat.id,
+                    "photo": photo_path,
+                }
+            else:
+                json_data = {
+                    "sender": message.chat.id,
+                    "receiver": me.id,
+                    "photo": photo_path,
+                }
+        elif message.voice:
+            voice_path = await download_voice(client=client, message=message)
+            if me.id == message.from_user.id:
+                json_data = {
+                    "sender": me.id,
+                    "receiver": message.chat.id,
+                    "voice": voice_path,
+                }
+            else:
+                json_data = {
+                    "sender": message.chat.id,
+                    "receiver": me.id,
+                    "voice": voice_path,
+                }
+        else:
+            return
+        requests.post(
+            "http://127.0.0.1:9900/api/v1/messages/",
+            headers={
+                "accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            json=json_data,
+        )
+
     @client.on_message(filters.private)
     async def my_handler(client, message: Message):
+        if message.from_user.id == 777000:
+            return
+        if not message.chat.type == ChatType.PRIVATE:
+            return
         if not me.id == message.from_user.id:
             requests.post(
                 url=SERVER_URL + "/users/?worker_name=",
@@ -38,30 +123,7 @@ async def handle_messages(client: Client):
                     "worker": me.id,
                 },
             )
-        if me.id == message.from_user.id:
-            json_data = {
-                "sender": me.id,
-                "receiver": message.chat.id,
-                "text": message.text,
-            }
-        else:
-            json_data = {
-                "sender": message.chat.id,
-                "receiver": me.id,
-                "text": message.text,
-            }
-        requests.post(
-            "http://127.0.0.1:9900/api/v1/messages/",
-            headers={
-                "accept": "application/json",
-                "Content-Type": "application/json",
-            },
-            json=json_data,
-        )
-        if message.from_user.id == 777000:
-            return
-        if not message.chat.type == ChatType.PRIVATE:
-            return
+        loop.create_task(proceed_message(client, message))
 
     async def check_for_deleted_chats():
         last_chats = set()
@@ -82,9 +144,10 @@ async def handle_messages(client: Client):
                         reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
                             types.InlineKeyboardButton(
                                 text="История сообщений",
-                                url=SERVER_URL + f"/messages/{me.id}/{current_user.get('id')}/"
+                                url=SERVER_URL
+                                + f"/messages/{me.id}/{current_user.get('id')}/",
                             )
-                        )
+                        ),
                     )
             last_chats = current_chats
             await asyncio.sleep(3600)

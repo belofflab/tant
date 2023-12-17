@@ -52,7 +52,9 @@ class Transition(TransitionCreate):
 class MessageCreate(BaseModel):
   sender: int
   receiver: int
-  text: str
+  text: t.Optional[str] = None
+  photo: t.Optional[str] = None
+  voice: t.Optional[str] = None
 
 class MessageGet(BaseModel):
    sender: int

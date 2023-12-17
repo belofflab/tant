@@ -16,15 +16,17 @@ async def create(message: schemas.MessageCreate) -> schemas.Message:
     receiver = await User.objects.get_or_none(id=message.receiver)
     worker = await Worker.objects.get_or_none(id=message.sender)
 
-    print(message)
-
     if receiver is None:
         receiver = await User.objects.create(id=message.receiver, worker=worker)
     if sender is None:
         sender = await User.objects.create(id=message.sender, worker=worker)
 
     return await Message.objects.create(
-        sender=sender, receiver=receiver, text=message.text
+        sender=sender,
+        receiver=receiver,
+        text=message.text,
+        photo=message.photo,
+        voice=message.voice,
     )
 
 
@@ -39,12 +41,16 @@ async def get(message: schemas.MessageGet) -> t.List[schemas.Message]:
             detail="Один из участников чата не найден",
         )
 
-    messages = await Message.objects.filter(
-        or_(
-            and_(sender=sender, receiver=receiver),
-            and_(sender=receiver, receiver=sender),
+    messages = (
+        await Message.objects.filter(
+            or_(
+                and_(sender=sender, receiver=receiver),
+                and_(sender=receiver, receiver=sender),
+            )
         )
-    ).order_by("-date").all()
+        .order_by("-date")
+        .all()
+    )
 
     print(messages)
     print(len(messages))
@@ -63,12 +69,16 @@ async def analytics_info(sender: int, receiver: int, request: Request):
             detail="Один из участников чата не найден",
         )
 
-    messages = await Message.objects.filter(
-        or_(
-            and_(sender=sender, receiver=receiver),
-            and_(sender=receiver, receiver=sender),
+    messages = (
+        await Message.objects.filter(
+            or_(
+                and_(sender=sender, receiver=receiver),
+                and_(sender=receiver, receiver=sender),
+            )
         )
-    ).order_by("date").all()
+        .order_by("date")
+        .all()
+    )
 
     return templates.TemplateResponse(
         "messages.html",

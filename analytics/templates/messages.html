@@ -56,7 +56,16 @@
                     </small>
                     <br>
                     <small>Дата: {{ message.date }}</small><br>
-                    {{ message.text }}
+                    {% if message.text and message.photo %}
+                        <img style="width: 50%;" src="/{{message.photo}}" alt="">
+                        {{message.text}}
+                    {% elif message.photo %}
+                        <img style="width: 50%;" src="/{{message.photo}}" alt="">
+                    {% elif message.voice %}
+                        <video controls="" autoplay="" name="media"><source src="/{{message.voice}}" type="audio/ogg"></video>
+                    {% elif message.text %}
+                        {{ message.text }}
+                    {% endif %}
                 </li>
                 {% else %}
                 <li class="message to alert alert-info">
@@ -76,7 +85,16 @@
                         {% endif %}
                     </small><br>
                     <small>Дата: {{ message.date }}</small><br>
-                    {{ message.text }}
+                    {% if message.text and message.photo %}
+                        <img style="width: 50%;" src="/{{message.photo}}" alt="">
+                        {{message.text}}
+                    {% elif message.photo %}
+                        <img style="width: 50%;" src="/{{message.photo}}" alt="">
+                    {% elif message.voice %}
+                        <video controls="" autoplay="" name="media"><source src="/{{message.voice}}" type="audio/ogg"></video>
+                    {% elif message.text %}
+                        {{ message.text }}
+                    {% endif %}
                 </li>
                 {% endif %}
                 {% endfor %}
