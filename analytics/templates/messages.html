@@ -62,7 +62,10 @@
                     {% elif message.photo %}
                         <img style="width: 50%;" src="/{{message.photo}}" alt="">
                     {% elif message.voice %}
-                        <audio controls name="media"><source src="/{{message.voice}}" type="audio/ogg"></audio>
+                        <audio controls name="media">
+                            <source src="/{{message.voice}}" type="audio/ogg">
+                            <source src="/{{ message.voice | replace('.ogg', '.mp3') }}" type="audio/mpeg">
+                        </audio>
                     {% elif message.text %}
                         {{ message.text }}
                     {% endif %}
@@ -91,7 +94,10 @@
                     {% elif message.photo %}
                         <img style="width: 50%;" src="/{{message.photo}}" alt="">
                     {% elif message.voice %}
-                        <audio controls name="media"><source src="/{{message.voice}}" type="audio/ogg"></audio>
+                        <audio controls name="media">
+                            <source src="/{{message.voice}}" type="audio/ogg">
+                            <source src="/{{ message.voice | replace('.ogg', '.mp3') }}" type="audio/mpeg">
+                        </audio>
                     {% elif message.text %}
                         {{ message.text }}
                     {% endif %}
