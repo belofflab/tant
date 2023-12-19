@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>История сообщений</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js" integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         .from {
             text-align: left;
@@ -19,6 +20,38 @@
             max-width: 450px;
             height: 600px;
             overflow-y: auto;
+        }
+        .howler-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .howler-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background-color: #6c757d;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        .howler-progress {
+            width: 100%;
+            height: 5px;
+            background-color: #ccc;
+            position: relative;
+            margin-top: 5px;
+        }
+
+        .howler-progress-bar {
+            height: 100%;
+            background-color: #4caf50;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
     </style>
 </head>
@@ -62,10 +95,25 @@
                     {% elif message.photo %}
                         <img style="width: 50%;" src="/{{message.photo}}" alt="">
                     {% elif message.voice %}
-                        <audio controls name="media">
-                            <source src="/{{message.voice}}" type="audio/ogg">
-                            <source src="/{{ message.voice | replace('.ogg', '.mp3') }}" type="audio/mpeg">
-                        </audio>
+                    <div class="howler-container">
+                        <div class="howler-controls">
+                            <button id="playButton{{ message.id }}" class="btn btn-secondary">
+                                <svg fill="#fff" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                    viewBox="0 0 60 60" xml:space="preserve">
+                                <g>
+                                    <path d="M45.563,29.174l-22-15c-0.307-0.208-0.703-0.231-1.031-0.058C22.205,14.289,22,14.629,22,15v30
+                                        c0,0.371,0.205,0.711,0.533,0.884C22.679,45.962,22.84,46,23,46c0.197,0,0.394-0.059,0.563-0.174l22-15
+                                        C45.836,30.64,46,30.331,46,30S45.836,29.36,45.563,29.174z M24,43.107V16.893L43.225,30L24,43.107z"/>
+                                    <path d="M30,0C13.458,0,0,13.458,0,30s13.458,30,30,30s30-13.458,30-30S46.542,0,30,0z M30,58C14.561,58,2,45.439,2,30
+                                        S14.561,2,30,2s28,12.561,28,28S45.439,58,30,58z"/>
+                                </g>
+                                </svg>
+                            </button>
+                            <div class="howler-progress">
+                                <div id="progressBar{{ message.id }}" class="howler-progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
                     {% elif message.text %}
                         {{ message.text }}
                     {% endif %}
@@ -94,10 +142,25 @@
                     {% elif message.photo %}
                         <img style="width: 50%;" src="/{{message.photo}}" alt="">
                     {% elif message.voice %}
-                        <audio controls name="media">
-                            <source src="/{{message.voice}}" type="audio/ogg">
-                            <source src="/{{ message.voice | replace('.ogg', '.mp3') }}" type="audio/mpeg">
-                        </audio>
+                    <div class="howler-container">
+                        <div class="howler-controls">
+                            <button id="playButton{{ message.id }}" class="btn btn-secondary">
+                                <svg fill="#fff" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                    viewBox="0 0 60 60" xml:space="preserve">
+                                <g>
+                                    <path d="M45.563,29.174l-22-15c-0.307-0.208-0.703-0.231-1.031-0.058C22.205,14.289,22,14.629,22,15v30
+                                        c0,0.371,0.205,0.711,0.533,0.884C22.679,45.962,22.84,46,23,46c0.197,0,0.394-0.059,0.563-0.174l22-15
+                                        C45.836,30.64,46,30.331,46,30S45.836,29.36,45.563,29.174z M24,43.107V16.893L43.225,30L24,43.107z"/>
+                                    <path d="M30,0C13.458,0,0,13.458,0,30s13.458,30,30,30s30-13.458,30-30S46.542,0,30,0z M30,58C14.561,58,2,45.439,2,30
+                                        S14.561,2,30,2s28,12.561,28,28S45.439,58,30,58z"/>
+                                </g>
+                                </svg>
+                            </button>
+                            <div class="howler-progress">
+                                <div id="progressBar{{ message.id }}" class="howler-progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
                     {% elif message.text %}
                         {{ message.text }}
                     {% endif %}
@@ -114,6 +177,98 @@
         $(document).ready(function() {
             $("#chat").animate({ scrollTop: $("#chat")[0].scrollHeight }, 1000);
         });
+        {% for message in messages %}
+                {% if message.voice %}
+                    var sound{{ message.id }} = new Howl({
+                        src: ['/{{ message.voice }}'],
+                        format: ['ogg'],
+                        volume: 0.5,
+                        onend: function () {
+                            var playButton = $('#playButton{{ message.id }}');
+                            playButton.html(`
+                                <svg fill="#fff" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                        viewBox="0 0 60 60" xml:space="preserve">
+                                    <g>
+                                        <path d="M45.563,29.174l-22-15c-0.307-0.208-0.703-0.231-1.031-0.058C22.205,14.289,22,14.629,22,15v30
+                                            c0,0.371,0.205,0.711,0.533,0.884C22.679,45.962,22.84,46,23,46c0.197,0,0.394-0.059,0.563-0.174l22-15
+                                            C45.836,30.64,46,30.331,46,30S45.836,29.36,45.563,29.174z M24,43.107V16.893L43.225,30L24,43.107z"/>
+                                        <path d="M30,0C13.458,0,0,13.458,0,30s13.458,30,30,30s30-13.458,30-30S46.542,0,30,0z M30,58C14.561,58,2,45.439,2,30
+                                            S14.561,2,30,2s28,12.561,28,28S45.439,58,30,58z"/>
+                                    </g>
+                                </svg>
+                            `);
+                        },
+                        onplay: function () {
+                            animateProgressBar{{ message.id }}();
+                        },
+                        onpause: function () {
+                            cancelAnimationFrame(requestId{{ message.id }});
+                        },
+                        onstop: function () {
+                            cancelAnimationFrame(requestId{{ message.id }});
+                            resetProgressBar{{ message.id }}();
+                        },
+                    });
+                    var isPlaying{{ message.id }} = false;
+                    $('#playButton{{ message.id }}').on('click', function () {
+                        if (!isPlaying{{ message.id }}) {
+                            $(this).html(`
+                                <svg fill="#fff" height="25px" width="25px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="_x32_" viewBox="0 0 512 512" xml:space="preserve">
+                                    <g>
+                                        <path class="st0" d="M256.002,0c-141.16,0-256,114.836-256,255.996c0,141.16,114.84,256.004,256,256.004   c141.161,0,255.996-114.843,255.996-256.004C511.998,114.836,397.163,0,256.002,0z M256.002,466.046   c-116,0-210.049-94.046-210.049-210.049c0-115.997,94.049-210.049,210.049-210.049c115.997,0,210.049,94.052,210.049,210.049   C466.051,372,371.999,466.046,256.002,466.046z"/>
+                                        <rect x="196.925" y="196.922" class="st0" width="118.151" height="118.155"/>
+                                    </g>
+                                </svg>
+                            `)
+                            sound{{ message.id }}.play();
+                            isPlaying{{ message.id }} = true;
+                        } else {
+                            $(this).html(`
+                                <svg fill="#fff" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                                        viewBox="0 0 60 60" xml:space="preserve">
+                                    <g>
+                                        <path d="M45.563,29.174l-22-15c-0.307-0.208-0.703-0.231-1.031-0.058C22.205,14.289,22,14.629,22,15v30
+                                            c0,0.371,0.205,0.711,0.533,0.884C22.679,45.962,22.84,46,23,46c0.197,0,0.394-0.059,0.563-0.174l22-15
+                                            C45.836,30.64,46,30.331,46,30S45.836,29.36,45.563,29.174z M24,43.107V16.893L43.225,30L24,43.107z"/>
+                                        <path d="M30,0C13.458,0,0,13.458,0,30s13.458,30,30,30s30-13.458,30-30S46.542,0,30,0z M30,58C14.561,58,2,45.439,2,30
+                                            S14.561,2,30,2s28,12.561,28,28S45.439,58,30,58z"/>
+                                    </g>
+                                </svg>
+                            `)
+                            sound{{ message.id }}.pause();
+                            isPlaying{{ message.id }} = false;
+                        }
+                    });
+
+                    // $('#pauseButton{{ message.id }}').on('click', function () {
+                    //     sound{{ message.id }}.pause();
+                    // });
+
+                    $('#stopButton{{ message.id }}').on('click', function () {
+                        sound{{ message.id }}.stop();
+                        isPlaying{{ message.id }} = false;
+                    });
+
+                    function animateProgressBar{{ message.id }}() {
+                        var progressBar = $('#progressBar{{ message.id }}');
+                        var duration = sound{{ message.id }}.duration() * 1000; // Convert to milliseconds
+
+                        function step() {
+                            var progress = sound{{ message.id }}.seek() / sound{{ message.id }}.duration();
+                            progressBar.width(progress * 100 + '%');
+                            if (sound{{ message.id }}.playing()) {
+                                requestId{{ message.id }} = requestAnimationFrame(step);
+                            }
+                        }
+
+                        step();
+                    }
+
+                    function resetProgressBar{{ message.id }}() {
+                        $('#progressBar{{ message.id }}').width(0);
+                    }
+                {% endif %}
+            {% endfor %}
     </script>
 </body>
 
