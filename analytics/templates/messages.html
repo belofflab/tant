@@ -95,7 +95,7 @@
                     {% elif message.photo %}
                         <img style="width: 50%;" src="/{{message.photo}}" alt="">
                     {% elif message.voice %}
-                    <div class="howler-container">
+                    <!-- <div class="howler-container">
                         <div class="howler-controls">
                             <button id="playButton{{ message.id }}" class="btn btn-secondary">
                                 <svg fill="#fff" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -113,7 +113,10 @@
                                 <div id="progressBar{{ message.id }}" class="howler-progress-bar"></div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+                    <audio controls>
+                        <source src="/{{message.voice}}" type="audio/ogg">
+                    </audio>
                     {% elif message.text %}
                         {{ message.text }}
                     {% endif %}
@@ -142,7 +145,7 @@
                     {% elif message.photo %}
                         <img style="width: 50%;" src="/{{message.photo}}" alt="">
                     {% elif message.voice %}
-                    <div class="howler-container">
+                    <!-- <div class="howler-container">
                         <div class="howler-controls">
                             <button id="playButton{{ message.id }}" class="btn btn-secondary">
                                 <svg fill="#fff" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -160,7 +163,10 @@
                                 <div id="progressBar{{ message.id }}" class="howler-progress-bar"></div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+                    <audio controls>
+                        <source src="/{{message.voice}}" type="audio/ogg">
+                    </audio>
                     {% elif message.text %}
                         {{ message.text }}
                     {% endif %}
@@ -180,7 +186,7 @@
         {% for message in messages %}
                 {% if message.voice %}
                     var sound{{ message.id }} = new Howl({
-                        src: ['/{{ message.voice }}'],
+                        src: [URL.createObjectURL('/{{ message.voice }}')],
                         format: ['ogg'],
                         volume: 0.5,
                         onend: function () {
