@@ -223,7 +223,7 @@ async def setup(message: types.Message) -> None:
 
 🕯️@{worker}
 """,
-            "amount": "1500",
+            "amount": "2000",
         },
         {
             "name": "Снятие негатива",
@@ -255,7 +255,7 @@ async def setup(message: types.Message) -> None:
  
 🕯️@{worker}
 """,
-            "amount": "1500",
+            "amount": "2000",
         },
     ]
 
