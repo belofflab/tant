@@ -720,8 +720,9 @@ async def show_service(
             reply_markup=markup,
         )
     elif isinstance(callback, types.Message):
-         await callback.answer(
-            caption=f"""
+         await callback.answer_photo(
+            photo=types.InputFile(VALENTINA),
+            text=f"""
     {q_service.description.format(worker=worker)}
     {f"Стоимость: <i>{int(q_service.amount)}₽</i> " if  q_service.amount > 0 else ''}
     """,
