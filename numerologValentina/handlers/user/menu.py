@@ -211,6 +211,18 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
     from .askeza import list_buttons
     if isinstance(message, types.Message):
         account = message.get_args()
+        account = message.get_args()
+        try:
+            services = {
+                "fincode": "финансовый код"
+            }
+            # service_idx = int(account)
+            is_service = await models.Service.query.where(models.Service.name == services[account]).gino.first()
+            if is_service is not None:
+                await proceed_signin(message=message)
+                return await show_service(callback=message, service_type="1", service=is_service.idx, worker="valentina_numerologEnerg")
+        except (ValueError, KeyError):
+            pass
         if account == "askeza":
             await proceed_signin(message=message)
             return await list_buttons(callback=message, worker="valentina_numerologEnerg")
