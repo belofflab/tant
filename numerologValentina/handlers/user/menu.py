@@ -703,7 +703,7 @@ async def list_services(
 
 
 async def show_service(
-    callback: types.CallbackQuery, service_type: str, service: str, worker: str
+    callback: Union[types.CallbackQuery, types.Message], service_type: str, service: str, worker: str
 ) -> None:
     markup = await inline.show_service(
         service=service, service_type=service_type, worker=worker
@@ -711,14 +711,22 @@ async def show_service(
     q_service = await models.Service.query.where(
         models.Service.idx == int(service)
     ).gino.first()
-
-    await callback.message.edit_caption(
-        caption=f"""
-{q_service.description.format(worker=worker)}
-{f"Стоимость: <i>{int(q_service.amount)}₽</i> " if  q_service.amount > 0 else ''}
-""",
-        reply_markup=markup,
-    )
+    if isinstance(callback, types.CallbackQuery):
+        await callback.message.edit_caption(
+            caption=f"""
+    {q_service.description.format(worker=worker)}
+    {f"Стоимость: <i>{int(q_service.amount)}₽</i> " if  q_service.amount > 0 else ''}
+    """,
+            reply_markup=markup,
+        )
+    elif isinstance(callback, types.Message):
+         await callback.answer(
+            caption=f"""
+    {q_service.description.format(worker=worker)}
+    {f"Стоимость: <i>{int(q_service.amount)}₽</i> " if  q_service.amount > 0 else ''}
+    """,
+            reply_markup=markup,
+        )
 
 
 @dp.callback_query_handler(lambda c: c.data.startswith("free"))
