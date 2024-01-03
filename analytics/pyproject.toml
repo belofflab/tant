@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "belofflab-store-api"
+name = "belofflab-analytics-api"
 version = "0.1.0"
 description = ""
 authors = ["Константин Белов <belofflab@gmail.com>"]
