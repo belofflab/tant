@@ -311,7 +311,7 @@ async def admin_menu(message: types.Message) -> None:
         f"""
 Доступное меню: 
 Всего пользователей: {len(users)}
-Неактивные пользователи {len([user for user in users if not user.is_active])}
+Неактивные пользователи: {len([user for user in users if not user.is_active])}
 """,
         reply_markup=markup,
     )
