@@ -141,7 +141,7 @@ async def total_conversion(
         filtered_workers[worker.name] = {
             "sum1": sum(tmp_worker_requests),
             "sum2": round(float(sum(tmp_worker_requests)) * (worker.comission / 100), 2),
-            "sum3": sum(tmp_worker_requests) - round(float(sum(tmp_worker_requests)) * (worker.comission / 100), 2),
+            "sum3": round(float(sum(tmp_worker_requests)) - float(sum(tmp_worker_requests)) * (worker.comission / 100), 2),
             "avg": round(float(statistics.mean(tmp_worker_requests)), 2),
             "len": len(tmp_worker_requests)
         }
