@@ -49,7 +49,7 @@ async def total_conversion_date_range(message: types.Message, state: FSMContext)
         def proceed_workers(workers):
             return "\n".join(
                 [
-                    f"<b>{worker} ({worker_data['len']}Ч)</b> {worker_data['sum1']}₽ (~{worker_data['avg']}₽) ({worker_data['sum2']}₽) (наши {worker_data['sum3']}₽)"
+                    f"<b>{worker} ({worker_data['len']}Ч)</b> {worker_data['sum1']}₽ (~{worker_data['avg']}₽) ({worker_data['sum3']}₽) (наши {worker_data['sum2']}₽)"
                     for worker, worker_data in workers.items()
                 ]
             )
