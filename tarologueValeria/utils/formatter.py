@@ -11,7 +11,8 @@ def texttohtml(message: Message):
         "bold": "b",
         "italic": "i",
         "code": "code",
-        "strikethrough": "s"
+        "strikethrough": "s",
+        "text_link": "a"
     }
     for entity in entities:
         offset = entity.offset
