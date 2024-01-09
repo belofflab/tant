@@ -216,7 +216,7 @@ async def proceed_signin(message):
 
 @dp.message_handler(commands="start")
 async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) -> None:
-    from .askeza import list_buttons
+    from . import askeza, numercourse
     if isinstance(message, types.Message):
         account = message.get_args()
         try:
@@ -232,7 +232,10 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
             pass
         if account == "askeza":
             await proceed_signin(message=message)
-            return await list_buttons(callback=message, worker="viktoria_numer")
+            return await askeza.list_buttons(callback=message, worker="viktoria_numer")
+        if account == "course_numerology":
+            await proceed_signin(message=message)
+            return await numercourse.list_buttons(callback=message, worker="viktoria_numer")
         if account == "2024":
             await proceed_signin(message=message)
             return await s2024(callback=message, worker="viktoria_numer")

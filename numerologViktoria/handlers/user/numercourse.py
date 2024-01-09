@@ -136,7 +136,7 @@ async def list_buttons(
         )
     elif isinstance(callback, types.Message):
         await callback.answer_photo(
-            photo=types.InputFile(ASKEZA),
+            photo=types.InputFile(VIKTORIA),
             caption=ASKEZA_DESCRIPTION,
             reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
                 *[
