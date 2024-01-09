@@ -46,28 +46,37 @@ TRAINING_DESCRIPTION = """
 @{worker}
 """
 
-trainings = {"0": {"name": "обучение ТАРО", "description": TRAINING_DESCRIPTION}}
+trainings = {
+    "0": {"name": "обучение ТАРО", "description": TRAINING_DESCRIPTION},
+    "1": {
+        "name": "Обучение нумерологии",
+        "callback_data": inline.make_numcouse_cd(level=1, worker=WORKER_USERNAME),
+    },
+}
 
 
 async def list_courses(callback: types.CallbackQuery, worker: str, **kwargs):
-    await callback.message.edit_caption(
-        "Выберите обучение:",
-        reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
-            *[
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    for key, value in trainings.items():
+        if value.get("callback_data") is not None:
+            markup.add(
                 types.InlineKeyboardButton(
                     text=value["name"],
-                    callback_data=inline.make_training_cd(
-                        level=2, worker=worker, tid=key
-                    ),
+                    callback_data=value["callback_data"],
                 )
-                for key, value in trainings.items()
-            ],
-            types.InlineKeyboardButton(
-                text="Назад",
-                callback_data=inline.make_training_cd(level=0, worker=worker)
             )
-        ),
+        else:
+            markup.add(types.InlineKeyboardButton(
+                text=value["name"],
+                callback_data=inline.make_training_cd(level=2, worker=worker, tid=key),
+            ))
+    markup.add(
+        types.InlineKeyboardButton(
+            text="Назад",
+            callback_data=inline.make_training_cd(level=0, worker=worker),
+        )
     )
+    await callback.message.edit_caption("Выберите обучение:", reply_markup=markup)
 
 
 async def get_or_buy_course(callback: types.CallbackQuery, worker: str, tid: str):
@@ -84,8 +93,9 @@ async def get_or_buy_course(callback: types.CallbackQuery, worker: str, tid: str
     #     expire_date=now + datetime.timedelta(minutes=30),
     #     member_limit=1,
     # )
+
     await callback.message.edit_caption(
-        caption=trainings[tid]['description'].format(worker=worker),
+        caption=trainings[tid]["description"].format(worker=worker),
         reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
             # types.InlineKeyboardButton(text="Смотреть курс", url=new_link.invite_link)
             # if is_active_subscription

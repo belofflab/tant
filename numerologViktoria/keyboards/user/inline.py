@@ -14,6 +14,9 @@ relationships_cd = CallbackData("show_relationships", "level", "worker", "key")
 askeza_cd = CallbackData(
     "show_askeza", "level", "worker", "content_type", "content_page"
 )
+numcourse_cd = CallbackData(
+    "show_numcourse", "level", "worker", "content_type", "content_page"
+)
 
 training_cd = CallbackData(
     "show_training", "level", "worker", "tid"
@@ -44,6 +47,11 @@ def make_matrix_cd(level, page="1", worker="0", request_id="0", matrix_page="1")
 
 def make_askeza_cd(level, worker="0", content_type="0", content_page="1"):
     return askeza_cd.new(
+        level=level, worker=worker, content_type=content_type, content_page=content_page
+    )
+
+def make_numcouse_cd(level, worker="0", content_type="0", content_page="1"):
+    return numcourse_cd.new(
         level=level, worker=worker, content_type=content_type, content_page=content_page
     )
 

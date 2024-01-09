@@ -438,6 +438,7 @@ async def setup_sender_text(message: types.Message, state: FSMContext) -> None:
                 )
 
                 return
+            print(message)
             data["text"] = formatter.texttohtml(message)
             await message.delete()
         if data.get("to_change") is not None:
