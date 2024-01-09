@@ -89,7 +89,7 @@ askeza_buttons = {
 
 @{WORKER_USERNAME} 
 """,
-    "whatsapp_btn": "https://api.whatsapp.com/send/?phone=79292084866&textХочу+узнать+подробнее+об+обучении&type=phone_number&app_absent=0?"
+    "whatsapp_btn": "https://api.whatsapp.com/send/?phone=79292084866&text=Хочу+узнать+подробнее+об+обучении&type=phone_number&app_absent=0?"
     }
 }
 
