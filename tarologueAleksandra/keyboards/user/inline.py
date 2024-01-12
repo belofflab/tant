@@ -6,15 +6,26 @@ service_cd = CallbackData("show_service", "level", "worker", "type", "service")
 askeza_cd = CallbackData(
     "show_askeza", "level", "worker", "content_type", "content_page"
 )
+numcourse_cd = CallbackData(
+    "show_numcourse", "level", "worker", "content_type", "content_page"
+)
 
 
 def make_service_cd(level, worker="taro2_sashA", type="0", service="0"):
     return service_cd.new(level=level, worker=worker, type=type, service=service)
 
+
+def make_numcouse_cd(level, worker="0", content_type="0", content_page="1"):
+    return numcourse_cd.new(
+        level=level, worker=worker, content_type=content_type, content_page=content_page
+    )
+
+
 def make_askeza_cd(level, worker="0", content_type="0", content_page="1"):
     return askeza_cd.new(
         level=level, worker=worker, content_type=content_type, content_page=content_page
     )
+
 
 async def free_markup(worker: str) -> InlineKeyboardMarkup:
     CURRENT_LEVEL = 1
@@ -22,7 +33,8 @@ async def free_markup(worker: str) -> InlineKeyboardMarkup:
 
     markup.add(
         InlineKeyboardButton(
-            text="Назад", callback_data=make_service_cd(CURRENT_LEVEL - 1, worker=worker)
+            text="Назад",
+            callback_data=make_service_cd(CURRENT_LEVEL - 1, worker=worker),
         )
     )
 
@@ -38,6 +50,10 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
             "callback_data": make_askeza_cd(level=CURRENT_LEVEL + 1, worker=worker),
         },
         {"text": "Бесплатная консультация 👩‍💻", "callback_data": f"free#{worker}"},
+        {
+            "text": "обучение Нумерологии",
+            "callback_data": make_numcouse_cd(level=CURRENT_LEVEL + 1, worker=worker),
+        },
         {
             "text": "Все услуги 📄",
             "callback_data": make_service_cd(level=CURRENT_LEVEL + 1, worker=worker),
@@ -65,7 +81,8 @@ async def service_types_keyboard(worker: str) -> InlineKeyboardMarkup:
         )
     markup.add(
         InlineKeyboardButton(
-            text="Назад", callback_data=make_service_cd(CURRENT_LEVEL - 1, worker=worker)
+            text="Назад",
+            callback_data=make_service_cd(CURRENT_LEVEL - 1, worker=worker),
         )
     )
     return markup
