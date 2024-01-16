@@ -60,7 +60,7 @@ def make_numcouse_cd(level, worker="0", content_type="0", content_page="1"):
     )
 
 def make_forecastcourse_cd(level, worker="0", content_type="0", content_page="1"):
-    return numcourse_cd.new(
+    return forecastcourse_cd.new(
         level=level, worker=worker, content_type=content_type, content_page=content_page
     )
 
