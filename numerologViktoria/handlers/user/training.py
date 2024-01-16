@@ -52,7 +52,7 @@ trainings = {
         "name": "Обучение нумерологии",
         "callback_data": inline.make_numcouse_cd(level=1, worker=WORKER_USERNAME),
     },
-    "1": {
+    "2": {
         "name": "Обучение Прогноз",
         "callback_data": inline.make_forecastcourse_cd(level=1, worker=WORKER_USERNAME),
     },
