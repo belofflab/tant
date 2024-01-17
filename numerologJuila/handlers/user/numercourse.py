@@ -3,8 +3,8 @@ from keyboards.user import inline
 from loader import dp
 from .menu import start
 from typing import Union
-# from .training import list_courses
-from data.config import ASKEZA, VALENTINA
+from .training import list_courses
+from data.config import VIKTORIA
 
 WORKER_NAME = "Виктории"
 WORKER_USERNAME = "viktoria_numer"
@@ -93,7 +93,7 @@ askeza_buttons = {
     }
 }
 
-ASKEZA_DESCRIPTION = """
+NUMERCOURSE_DESCRIPTION = """
 <b>Обучение нумерологии. </b>
 
 <i>«Прогнозирование + коррекция судьбы» </i>
@@ -116,7 +116,7 @@ async def list_buttons(
     if isinstance(callback, types.CallbackQuery):
         await callback.message.edit_media(
             media=types.InputMediaPhoto(
-                media=types.InputFile(VALENTINA), caption=ASKEZA_DESCRIPTION
+                media=types.InputFile(VIKTORIA), caption=NUMERCOURSE_DESCRIPTION
             ),
             reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
                 *[
@@ -136,8 +136,8 @@ async def list_buttons(
         )
     elif isinstance(callback, types.Message):
         await callback.answer_photo(
-            photo=types.InputFile(VALENTINA),
-            caption=ASKEZA_DESCRIPTION,
+            photo=types.InputFile(VIKTORIA),
+            caption=NUMERCOURSE_DESCRIPTION,
             reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
                 *[
                     types.InlineKeyboardButton(
@@ -179,7 +179,7 @@ async def numcourse_navigate(callback: types.CallbackQuery, callback_data: dict)
     content_type = callback_data.get("content_type")
     content_page = callback_data.get("content_page")
 
-    levels = {"0": start, "1": list_buttons, "2": show_button}
+    levels = {"0": list_courses, "1": list_buttons, "2": show_button}
 
     current_level_function = levels[level]
 

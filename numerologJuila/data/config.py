@@ -8,6 +8,7 @@ ENV_FILE = BASE_DIR / ".env"
 BANNER = BASE_DIR / "media/banner.jpg"
 WORKER_PHOTO = BASE_DIR / "media/worker.jpg"
 ASKEZA = BASE_DIR  / "media/askeza.jpg"
+VIKTORIA = BASE_DIR / "media/viktoria.jpg"
 
 if os.path.exists(ENV_FILE):
     load_dotenv(ENV_FILE)

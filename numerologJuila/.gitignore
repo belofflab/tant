@@ -5,6 +5,7 @@ media/*
 !media/__init__.py
 !media/banner.jpg
 !media/worker.jpg
+!media/viktoria.jpg
 !media/askeza.jpg
 ### Linux ###
 *~

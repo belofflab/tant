@@ -11,7 +11,7 @@ from aiogram.dispatcher import FSMContext
 
 @dp.message_handler(IsAdmin(), commands="setup")
 async def setup(message: types.Message) -> None:
-    service_types = [{"idx": 1, "name": "test"}, {"idx": 2, "name": "Ритуалы"}]
+    service_types = [{"idx": 1, "name": "test"},]
 
     for service_type in service_types:
         await models.ServiceType.create(**service_type)
