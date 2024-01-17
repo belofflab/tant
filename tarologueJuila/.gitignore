@@ -4,7 +4,7 @@ QiwiCrash*
 media/*
 !media/__init__.py
 !media/banner.jpg
-!media/valeria.jpg
+!media/worker.jpg
 !media/askeza.jpg
 ### Linux ###
 *~

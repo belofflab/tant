@@ -6,9 +6,6 @@ service_cd = CallbackData("show_service", "level", "worker", "type", "service")
 askeza_cd = CallbackData(
     "show_askeza", "level", "worker", "content_type", "content_page"
 )
-hyromantia_cd = CallbackData(
-    "show_hyromantia", "level", "worker", "content_type", "content_page"
-)
 
 def make_service_cd(level, worker="taro2_sashA", type="0", service="0"):
     return service_cd.new(level=level, worker=worker, type=type, service=service)
@@ -17,12 +14,6 @@ def make_askeza_cd(level, worker="0", content_type="0", content_page="1"):
     return askeza_cd.new(
         level=level, worker=worker, content_type=content_type, content_page=content_page
     )
-
-def make_hyromantia_cd(level, worker="0", content_type="0", content_page="1"):
-    return hyromantia_cd.new(
-        level=level, worker=worker, content_type=content_type, content_page=content_page
-    )
-
 
 async def free_markup(worker: str) -> InlineKeyboardMarkup:
     CURRENT_LEVEL = 1
@@ -44,10 +35,6 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
         {
             "text": "Аскеза на желание 👑",
             "callback_data": make_askeza_cd(level=CURRENT_LEVEL + 1, worker=worker),
-        },
-        {
-            "text": "Хиромантия 🖐️",
-            "callback_data": make_hyromantia_cd(level=CURRENT_LEVEL + 1, worker=worker),
         },
         {"text": "Бесплатная консультация 👩‍💻", "callback_data": f"free#{worker}"},
         {

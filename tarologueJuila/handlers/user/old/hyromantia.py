@@ -1,7 +1,7 @@
 from aiogram import types
 from keyboards.user import inline
 from loader import dp
-from .menu import start
+from ..menu import start
 
 WORKER_NAME = "Валерии"
 WORKER_USERNAME = "tarolog_va1eria"
