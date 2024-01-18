@@ -30,13 +30,13 @@ headers = {
 }
 
 
-async def get_astrology_report(date_of_birth):
+async def get_astrology_report(date_of_birth: datetime, age: str = ""):
     data = {
         "task": "alignment-for-the-year",
         "day": date_of_birth.day,
         "month": date_of_birth.month,
         "year": date_of_birth.year,
-        "age": "",
+        "age": age,
     }
 
     async with aiohttp.ClientSession() as session:
@@ -70,17 +70,18 @@ async def get_astrology_report(date_of_birth):
 @dp.message_handler(commands=["start"])
 async def start(message: types.Message):
     await message.reply(
-        "Привет, я бот Лабиринта Осознанности! Пришлите дату рождения в формате 10.10.2020 (DD.MM.YYYY)"
+        "Привет, я бот Лабиринта Осознанности! Пришлите дату рождения в формате \n\n10.10.2020 18 или 10.10.2020"
     )
 
 
-@dp.message_handler(regexp=r"\d{2}\.\d{2}\.\d{4}")
+@dp.message_handler(regexp=r"(\d{2}\.\d{2}\.\d{4})\s*(\d{1,2})?")
 async def handle_date(message: types.Message):
-    date_of_birth = re.search(r"\d{2}\.\d{2}\.\d{4}", message.text)
+    date_of_birth = re.search(r"(\d{2}\.\d{2}\.\d{4})\s*(\d{1,2})?", message.text)
 
     if date_of_birth:
-        date_of_birth = datetime.strptime(date_of_birth.group(), "%d.%m.%Y")
-        report_content = await get_astrology_report(date_of_birth)
+        birth_time = date_of_birth.group(2) if date_of_birth.group(2) else ""
+        date_of_birth = datetime.strptime(date_of_birth.group(1), "%d.%m.%Y")
+        report_content = await get_astrology_report(date_of_birth, age=birth_time)
 
         report_filename = f"media/{uuid.uuid4()}.html"
         with open(report_filename, "w", encoding="utf-8") as f:
