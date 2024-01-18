@@ -91,7 +91,7 @@ async def handle_date(message: types.Message):
             reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
                 types.InlineKeyboardButton(
                     text=f"Отчет {date_of_birth}",
-                    web_app=types.WebAppInfo(url=SERVER_URL + report_filename),
+                    url=SERVER_URL + report_filename,
                 )
             ),
         )
