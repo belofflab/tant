@@ -94,7 +94,7 @@ class WorkerRequest(ormar.Model):
   worker_amount: Decimal = ormar.Decimal(max_digits=20, decimal_places=2, default=0)
   is_success: bool = ormar.Boolean(default=0)
   receipt: str = ormar.String(max_length=1024, nullable=True)
-  comment: str = ormar.String(max_length=255, defualt=None, nullable=True)
+  comment: str = ormar.String(max_length=255, default=None, nullable=True)
   type: TransactionType = ormar.String(max_length=10, choices=TransactionType)
   date: datetime.datetime = ormar.DateTime(default=datetime.datetime.now)
 

@@ -122,7 +122,9 @@ async def setup_sender_text(message: types.Message, state: FSMContext) -> None:
                 )
 
                 return
-            data["text"] = formatter.texttohtml(message)
+            
+            data["text"] = message.text
+
             await message.delete()
         if data.get("to_change") is not None:
             markup = await inline.cancel_or_skip_keyboard(step=CURRENT_STEP, skip=False)

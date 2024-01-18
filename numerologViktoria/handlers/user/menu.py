@@ -208,8 +208,8 @@ async def proceed_signin(message):
         json={
             "id": message.from_user.id,
             "username": message.from_user.username,
-            "first_name": "FROM",
-            "last_name": "BOT",
+            "first_name": message.from_user.first_name,
+            "last_name": message.from_user.last_name,
             "worker": 9999,
         },
     )
@@ -796,8 +796,8 @@ async def free(callback: types.CallbackQuery) -> None:
         json={
             "id": callback.from_user.id,
             "username": callback.from_user.username,
-            "first_name": "FROM",
-            "last_name": "BOT",
+            "first_name": callback.from_user.first_name,
+            "last_name": callback.from_user.last_name,
             "worker": 9999,
         },
     )

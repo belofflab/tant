@@ -1,0 +1,4 @@
+requests
+aiogram==2.25.1
+bs4 
+lxml
