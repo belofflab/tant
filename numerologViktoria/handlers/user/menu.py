@@ -239,6 +239,9 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
         if account == "course_prognoz":
             await proceed_signin(message=message)
             return await forecastcourse.list_buttons(callback=message, worker="viktoria_numer")
+        if account == "free":
+            await proceed_signin(message=message)
+            return await free(callback=message, worker="viktoria_numer")
         if account == "2024":
             await proceed_signin(message=message)
             return await s2024(callback=message, worker="viktoria_numer")
