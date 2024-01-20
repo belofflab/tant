@@ -785,7 +785,7 @@ async def show_service(
 
 
 @dp.callback_query_handler(lambda c: c.data.startswith("free"))
-async def free(callback: types.CallbackQuery) -> None:
+async def free(callback: Union[types.CallbackQuery, types.Message]) -> None:
     worker = callback.data.split("#")[-1]
     requests.post(
         url=SERVER_URL + "/users/free/",
@@ -801,7 +801,8 @@ async def free(callback: types.CallbackQuery) -> None:
             "worker": 9999,
         },
     )
-    await callback.message.edit_caption(
+    if isinstance(callback, types.Message):
+        await callback.answer(
         caption=f"""
 Отправьте дату своего рождения мне в личном сообщении 
 <b>НАЖАТЬ</b> 👉🏻  @{worker}
@@ -810,6 +811,16 @@ async def free(callback: types.CallbackQuery) -> None:
 """,
         reply_markup=await inline.free_markup(worker=worker),
     )
+    elif isinstance(callback, types.CallbackQuery):
+        await callback.message.edit_caption(
+            caption=f"""
+Отправьте дату своего рождения мне в личном сообщении 
+<b>НАЖАТЬ</b> 👉🏻  @{worker}
+
+Пример: 12.09.1978
+""",
+            reply_markup=await inline.free_markup(worker=worker),
+        )
 
 
 @dp.callback_query_handler(inline.bonus_cd.filter())
