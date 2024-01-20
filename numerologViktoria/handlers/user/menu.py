@@ -805,7 +805,8 @@ async def free(callback: Union[types.CallbackQuery, types.Message], **kwargs) ->
     )
     if isinstance(callback, types.Message):
         worker = kwargs.get("worker")
-        await callback.answer(
+        await callback.answer_photo(
+        photo=types.InputFile(VIKTORIA),
         caption=f"""
 Отправьте дату своего рождения мне в личном сообщении 
 <b>НАЖАТЬ</b> 👉🏻  @{worker}
