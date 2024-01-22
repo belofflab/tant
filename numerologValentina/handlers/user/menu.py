@@ -211,10 +211,10 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
     from .askeza import list_buttons
     if isinstance(message, types.Message):
         account = message.get_args()
-        account = message.get_args()
         try:
             services = {
-                "fincode": "финансовый код"
+                "fincode": "финансовый код",
+                "prognoz": "Прогноз на месяц"
             }
             # service_idx = int(account)
             is_service = await models.Service.query.where(models.Service.name == services[account]).gino.first()
