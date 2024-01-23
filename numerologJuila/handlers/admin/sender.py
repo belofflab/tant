@@ -99,7 +99,7 @@ async def setup_sender_text(message: types.Message, state: FSMContext) -> None:
         markup = await inline.cancel_or_skip_keyboard(step=CURRENT_STEP)
         if isinstance(message, types.Message):
             if to_change is not None:
-                await models.SenderTemplate.update.values(text=message.text).where(
+                await models.SenderTemplate.update.values(text=message.parse_entities()).where(
                     models.SenderTemplate.idx == int(to_change)
                 ).gino.status()
                 template = await models.SenderTemplate.query.where(
