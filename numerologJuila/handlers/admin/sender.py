@@ -31,7 +31,7 @@ async def sender_ct(callback: types.CallbackQuery, messageId=None) -> None:
 async def setup_sender(callback: types.CallbackQuery, state: FSMContext) -> None:
     CURRENT_STEP = "photo"
     async with state.proxy() as data:
-        markup = await inline.cancel_or_skip_keyboard(step=CURRENT_STEP)
+        markup = await inline.cancel_or_skip_keyboard(step=CURRENT_STEP, skip=False)
         message = await callback.message.edit_text(
             "Отправьте фото: ", reply_markup=markup
         )
