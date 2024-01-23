@@ -5,7 +5,7 @@ arebuild:
 wrebuild:
 	systemctl restart tarologueAleksandra
 	systemctl restart tarologuePolina
-	systemctl restart tarologueValeria
+	systemctl restart numerologJulia
 	systemctl restart numerologViktoria
 	systemctl restart numerologValentina
 	systemctl restart numerologNatalia
@@ -15,7 +15,7 @@ frebuild:
 	systemctl restart tant_client
 	systemctl restart tarologueAleksandra
 	systemctl restart tarologuePolina
-	systemctl restart tarologueValeria
+	systemctl restart numerologJulia
 	systemctl restart numerologViktoria
 	systemctl restart numerologValentina
 	systemctl restart numerologNatalia
