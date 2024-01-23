@@ -5,7 +5,7 @@ from typing import Union
 from aiogram import types
 import os
 import uuid
-from data.config import SERVER_URL, CHANNEL_ID, BASE_DIR, TRAINING_CHANNEL
+from data.config import SERVER_URL, CHANNEL_ID, BASE_DIR, TRAINING_CHANNEL, WORKER_USERNAME
 from database import models
 from keyboards.user import inline
 from aiogram.dispatcher import FSMContext
@@ -16,7 +16,7 @@ from .menu import start
 TRAINING_COST = 8000
 WORKER_NAME = "Виктории"
 WORKER_ID = 5625107813
-WORKER_USERNAME = "viktoria_numer"
+V_WORKER_USERNAME = "viktoria_numer"
 TRAINING_DESCRIPTION = """
 <b>Описание таро классика Уэйта</b>
 
@@ -98,7 +98,7 @@ async def get_or_buy_course(callback: types.CallbackQuery, worker: str, tid: str
     # )
 
     await callback.message.edit_caption(
-        caption=trainings[tid]["description"].format(worker=worker),
+        caption=trainings[tid]["description"].format(worker=V_WORKER_USERNAME),
         reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
             # types.InlineKeyboardButton(text="Смотреть курс", url=new_link.invite_link)
             # if is_active_subscription
