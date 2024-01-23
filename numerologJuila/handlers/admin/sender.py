@@ -282,8 +282,9 @@ async def setup_sender_ready(callback: types.CallbackQuery):
     template = await models.SenderTemplate.query.where(
         models.SenderTemplate.idx == int(template_id)
     ).gino.first()
+    await callback.message.answer("Вы успешно начали рассылку!")
     await sender.go(photo=template.photo, text=template.text, buttons=template.buttons)
-    await callback.message.edit_text("Вы успешно начали рассылку!")
+    await callback.message.answer("Рассылка успешно завершена!")
 
 
 @dp.callback_query_handler(
