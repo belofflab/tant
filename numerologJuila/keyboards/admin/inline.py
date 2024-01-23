@@ -96,13 +96,13 @@ async def cancel_or_skip_keyboard(step: str, skip=True):
     return markup
 
 
-async def setup_sender_change_keyboard(template_id: str, users_template_id: str):
+async def setup_sender_change_keyboard(template_id: str):
     buttons = [
-        {"text": "Фото", "callback_data": f"setup_sender_change#photo#{template_id}#{users_template_id}"},
-        {"text": "Текст", "callback_data": f"setup_sender_change#text#{template_id}#{users_template_id}"},
+        {"text": "Фото", "callback_data": f"setup_sender_change#photo#{template_id}"},
+        {"text": "Текст", "callback_data": f"setup_sender_change#text#{template_id}"},
         {
             "text": "Кнопки",
-            "callback_data": f"setup_sender_change#buttons#{template_id}#{users_template_id}",
+            "callback_data": f"setup_sender_change#buttons#{template_id}",
         },
     ]
 

@@ -5,18 +5,18 @@ from keyboards.admin import inline
 from loader import dp, bot
 from states.sender import Sender as SenderState
 from utils import image, sender
-from filters.is_admin import IsAdmin
+
 from aiogram.dispatcher import FSMContext
 
 
-@dp.callback_query_handler(IsAdmin(), lambda c: c.data == "sender")
+@dp.callback_query_handler(lambda c: c.data == "sender")
 async def sender_c(callback: types.CallbackQuery) -> None:
     markup = await inline.sender_keyboard()
 
     await callback.message.edit_reply_markup(reply_markup=markup)
 
 
-@dp.callback_query_handler(IsAdmin(), lambda c: c.data == "sender_templates")
+@dp.callback_query_handler(lambda c: c.data == "sender_templates")
 async def sender_ct(callback: types.CallbackQuery, messageId=None) -> None:
     markup = await inline.sender_templates_keyboard()
     if messageId is not None:
@@ -27,7 +27,7 @@ async def sender_ct(callback: types.CallbackQuery, messageId=None) -> None:
     await callback.message.edit_text(text="Доступные шаблоны: ", reply_markup=markup)
 
 
-@dp.callback_query_handler(IsAdmin(), lambda c: c.data == "setup_sender")
+@dp.callback_query_handler(lambda c: c.data == "setup_sender")
 async def setup_sender(callback: types.CallbackQuery, state: FSMContext) -> None:
     CURRENT_STEP = "photo"
     async with state.proxy() as data:
@@ -41,15 +41,12 @@ async def setup_sender(callback: types.CallbackQuery, state: FSMContext) -> None
     await SenderState.photo.set()
 
 
-@dp.message_handler(
-    IsAdmin(), content_types=[types.ContentType.PHOTO], state=SenderState.photo
-)
+@dp.message_handler(content_types=[types.ContentType.PHOTO], state=SenderState.photo)
 async def setup_sender_photo(message: types.Message, state: FSMContext) -> None:
     CURRENT_STEP = "text"
 
     async with state.proxy() as data:
         to_change = data.get("to_change")
-        to_change_users = data.get("to_change_users")
         markup = await inline.cancel_or_skip_keyboard(step=CURRENT_STEP)
         if isinstance(message, types.Message):
             image_path = await image.save(message=message)
@@ -69,7 +66,6 @@ async def setup_sender_photo(message: types.Message, state: FSMContext) -> None:
                     state=state,
                     message_id=data["last_message_id"],
                     new_template=template,
-                    users_template_id=to_change_users,  # TODO
                 )
 
                 return
@@ -95,12 +91,11 @@ async def setup_sender_photo(message: types.Message, state: FSMContext) -> None:
     await SenderState.text.set()
 
 
-@dp.message_handler(IsAdmin(), state=SenderState.text)
+@dp.message_handler(state=SenderState.text)
 async def setup_sender_text(message: types.Message, state: FSMContext) -> None:
     CURRENT_STEP = "buttons"
     async with state.proxy() as data:
         to_change = data.get("to_change")
-        to_change_users = data.get("to_change_users")
         markup = await inline.cancel_or_skip_keyboard(step=CURRENT_STEP)
         if isinstance(message, types.Message):
             if to_change is not None:
@@ -119,13 +114,10 @@ async def setup_sender_text(message: types.Message, state: FSMContext) -> None:
                     state=state,
                     message_id=data["last_message_id"],
                     new_template=template,
-                    users_template_id=to_change_users,
                 )
 
                 return
-
             data["text"] = message.parse_entities()
-
             await message.delete()
         if data.get("to_change") is not None:
             markup = await inline.cancel_or_skip_keyboard(step=CURRENT_STEP, skip=False)
@@ -158,59 +150,10 @@ async def setup_sender_text(message: types.Message, state: FSMContext) -> None:
     await SenderState.buttons.set()
 
 
-@dp.message_handler(IsAdmin(), state=SenderState.buttons)
+@dp.message_handler(state=SenderState.buttons)
 async def setup_sender_buttons(message: types.Message, state: FSMContext) -> None:
-    CURRENT_STEP = "users"
-    async with state.proxy() as data:
-        if isinstance(message, types.Message):
-            to_change = data.get("to_change")
-            if to_change is not None:
-                await models.SenderTemplate.update.values(buttons=message.text).where(
-                    models.SenderTemplate.idx == int(to_change)
-                ).gino.status()
-                template = await models.SenderTemplate.query.where(
-                    models.SenderTemplate.idx == int(to_change)
-                ).gino.first()
-                data["template_id"] = template.idx
-                await state.finish()
-
-                await message.delete()
-                return
-            data["buttons"] = message.text
-
-            await message.delete()
-        await state.finish()
-        new_template = await models.SenderTemplate.create(
-            photo=data.get("photo"), text=data.get("text"), buttons=data.get("buttons")
-        )
-
-        data["template_id"] = new_template.idx
-
-        await SenderState.users.set()
-
-        await bot.edit_message_text(
-            text="Выберите пользователей для рассылки: ",
-            chat_id=message.from_user.id,
-            message_id=data.get("last_message_id"),
-            reply_markup=await inline.choose_users_keyboard(new_template.idx),
-        )
-
-
-@dp.callback_query_handler(
-    IsAdmin(),
-    lambda c: c.data.startswith("setup_sender_users"),
-    state=SenderState.users,
-)
-async def setup_sender_users(callback: types.CallbackQuery, state: FSMContext) -> None:
     CURRENT_STEP = 3
-    message = callback
-    splitted_data = callback.data.split("#")
-    users_template_id = splitted_data[2]
-    new_template = await models.SenderTemplate.query.where(
-        models.SenderTemplate.idx == int(users_template_id)
-    ).gino.first()
     async with state.proxy() as data:
-        data["users_template_id"] = users_template_id
         if isinstance(message, types.Message):
             to_change = data.get("to_change")
             if to_change is not None:
@@ -221,45 +164,36 @@ async def setup_sender_users(callback: types.CallbackQuery, state: FSMContext) -
                     models.SenderTemplate.idx == int(to_change)
                 ).gino.first()
                 await state.finish()
-
                 await message.delete()
-
                 await ask_for_sender_ready(
                     message=message,
                     state=state,
                     message_id=data["last_message_id"],
                     new_template=template,
-                    users_template_id=users_template_id,
                 )
-
                 return
             data["buttons"] = message.text
 
             await message.delete()
 
         await state.finish()
-        # new_template = await models.SenderTemplate.create(
-        #     photo=data.get("photo"), text=data.get("text"), buttons=data.get("buttons")
-        # )
+        new_template = await models.SenderTemplate.create(
+            photo=data.get("photo"), text=data.get("text"), buttons=data.get("buttons")
+        )
         await ask_for_sender_ready(
             message=message,
             state=state,
             message_id=data.get("last_message_id"),
             new_template=new_template,
-            users_template_id=users_template_id,
         )
 
 
 async def ask_for_sender_ready(
-    message: types.Message,
-    state: FSMContext,
-    message_id,
-    new_template,
-    users_template_id,
+    message: types.Message, state: FSMContext, message_id, new_template
 ):
     buttons = [
-        f"Да/setup_sender_ready#{new_template.idx}#{users_template_id}",
-        # f"Изменить/setup_sender_change#{new_template.idx}#{users_template_id}",
+        f"Да/setup_sender_ready#{new_template.idx}",
+        f"Изменить/setup_sender_change#{new_template.idx}",
         f"Удалить шаблон/setup_sender_delete#{new_template.idx}",
     ]
 
@@ -279,9 +213,7 @@ async def ask_for_sender_ready(
     await state.set_data({"last_message_id": new_message.message_id})
 
 
-@dp.callback_query_handler(
-    IsAdmin(), lambda c: c.data.startswith("setup_sender_delete")
-)
+@dp.callback_query_handler(lambda c: c.data.startswith("setup_sender_delete"))
 async def setup_sender_delete(callback: types.CallbackQuery, state: FSMContext):
     template_id = callback.data.split("#")[-1]
     await models.SenderTemplate.delete.where(
@@ -294,9 +226,7 @@ async def setup_sender_delete(callback: types.CallbackQuery, state: FSMContext):
 
 
 @dp.callback_query_handler(
-    IsAdmin(),
-    lambda c: c.data.startswith("setup_sender_skip"),
-    state=SenderState.all_states,
+    lambda c: c.data.startswith("setup_sender_skip"), state=SenderState.all_states
 )
 async def setup_sender_skip(callback: types.CallbackQuery, state: FSMContext):
     states = {
@@ -329,7 +259,6 @@ async def setup_sender_skip(callback: types.CallbackQuery, state: FSMContext):
 
 
 @dp.callback_query_handler(
-    IsAdmin(),
     lambda c: c.data.startswith("show_template"),
 )
 async def setup_sender_ready(callback: types.CallbackQuery, state: FSMContext):
@@ -342,59 +271,29 @@ async def setup_sender_ready(callback: types.CallbackQuery, state: FSMContext):
         state=state,
         message_id=await state.get_data("last_message_id"),
         new_template=template,
-        users_template_id="all",  # TODO: sdasd
     )
 
 
-async def get_users_for_template(template_id):
-    users_associated = await models.UserUserTemplateAssociation.query.where(
-        models.UserUserTemplateAssociation.user_template_id == template_id
-    ).gino.all()
-    user_ids = [association.user_id for association in users_associated]
-
-    associated_users = await models.User.query.where(
-        models.User.idx.in_(user_ids)
-    ).gino.all()
-    return associated_users
-
-
 @dp.callback_query_handler(
-    IsAdmin(),
     lambda c: c.data.startswith("setup_sender_ready"),
 )
 async def setup_sender_ready(callback: types.CallbackQuery):
-    template_id = callback.data.split("#")[1]
-    users_template_id = callback.data.split("#")[2]
+    template_id = callback.data.split("#")[-1]
     template = await models.SenderTemplate.query.where(
         models.SenderTemplate.idx == int(template_id)
     ).gino.first()
-    users = []
-    if users_template_id == "all":
-        users = await models.User.query.where(models.User.is_active == True).gino.all()
-    else:
-        users = await get_users_for_template(int(users_template_id))
-    if callback.message.caption is None:
-        await callback.message.edit_text("Вы успешно начали рассылку!")
-    else:
-        await callback.message.edit_caption("Вы успешно начали рассылку!")
-    await sender.go(
-        photo=template.photo, text=template.text, buttons=template.buttons, users=users
-    )
-    await callback.message.answer("Рассылка успешно завершена!")
+    await sender.go(photo=template.photo, text=template.text, buttons=template.buttons)
+    await callback.message.edit_text("Вы успешно начали рассылку!")
 
 
 @dp.callback_query_handler(
-    IsAdmin(),
     lambda c: c.data.startswith("setup_sender_change"),
 )
 async def setup_sender_change(callback: types.CallbackQuery, state: FSMContext):
     splitted_data = callback.data.split("#")
-    if not len(splitted_data) > 3:
-        template_id = splitted_data[1]
-        users_template_id = splitted_data[2]
-        markup = await inline.setup_sender_change_keyboard(
-            template_id, users_template_id
-        )
+    if not len(splitted_data) > 2:
+        template_id = splitted_data[-1]
+        markup = await inline.setup_sender_change_keyboard(template_id)
         await callback.message.delete()
         new_message = await callback.message.answer(
             "Что хотите изменить?", reply_markup=markup
@@ -403,10 +302,8 @@ async def setup_sender_change(callback: types.CallbackQuery, state: FSMContext):
         return
     variant = splitted_data[1]
     template_id = splitted_data[2]
-    users_template_id = splitted_data[3]
 
     await state.set_data(data={"to_change": f"{template_id}"})
-    await state.set_data(data={"to_change_users": f"{users_template_id}"})
 
     states = {
         "photo": setup_sender,
@@ -418,7 +315,7 @@ async def setup_sender_change(callback: types.CallbackQuery, state: FSMContext):
 
 
 @dp.callback_query_handler(
-    IsAdmin(), lambda c: c.data == "setup_sender_cancel", state=SenderState.all_states
+    lambda c: c.data == "setup_sender_cancel", state=SenderState.all_states
 )
 async def setup_sender_cancel(callback: types.CallbackQuery, state: FSMContext):
     markup = await inline.sender_keyboard()
