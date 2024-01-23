@@ -4,7 +4,7 @@ from database import models
 from keyboards.admin import inline
 from loader import dp, bot
 from states.sender import Sender as SenderState
-from utils import image, sender, formatter
+from utils import image, sender
 from filters.is_admin import IsAdmin
 from aiogram.dispatcher import FSMContext
 
@@ -118,12 +118,12 @@ async def setup_sender_text(message: types.Message, state: FSMContext) -> None:
                     state=state,
                     message_id=data["last_message_id"],
                     new_template=template,
-                    users_template_id=to_change_users,  # TODO
+                    users_template_id=to_change_users,
                 )
 
                 return
             
-            data["text"] = message.text
+            data["text"] = message.parse_entities()
 
             await message.delete()
         if data.get("to_change") is not None:
