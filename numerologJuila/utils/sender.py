@@ -64,7 +64,8 @@ async def custom_send_message(chat_id, photo: str, text: str, buttons: str):
         )
     return message
 
-async def go(photo: str, text: str, buttons: str, users: list):
+async def go(photo: str, text: str, buttons: str):
+    users = await models.User.query.where(models.User.is_active==True).gino.all()
     for user in users:
         await asyncio.sleep(0.04)
         try:
@@ -74,9 +75,9 @@ async def go(photo: str, text: str, buttons: str, users: list):
                 text=text,
                 buttons=buttons
             )
-        # except exceptions.BotBlocked:
-        #     await models.User.update.values(is_active=False).where(
-        #         models.User.idx == user.idx
-        #     ).gino.status()
+        except exceptions.BotBlocked:
+            await models.User.update.values(is_active=False).where(
+                models.User.idx == user.idx
+            ).gino.status()
         except Exception as ex:
             print('Unknown error', ex)
