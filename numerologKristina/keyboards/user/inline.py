@@ -69,7 +69,7 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
             "text": "Обучение 🔥",
             "callback_data": make_training_cd(level=CURRENT_LEVEL + 1, worker=worker)
         },
-        {"text": "Телеграм канал", "url": "https://t.me/tvoi_tarollogg"},
+        # {"text": "Телеграм канал", "url": "https://t.me/tvoi_tarollogg"},
         {"text": "ХОЧУ В КОМАНДУ", "callback_data": f"wanttoteam#{worker}"},
     ]
     for button in buttons:

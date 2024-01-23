@@ -9,6 +9,7 @@ wrebuild:
 	systemctl restart numerologViktoria
 	systemctl restart numerologValentina
 	systemctl restart numerologNatalia
+	systemctl restart numerologKristina
 
 frebuild:
 	systemctl restart tant
@@ -19,3 +20,4 @@ frebuild:
 	systemctl restart numerologViktoria
 	systemctl restart numerologValentina
 	systemctl restart numerologNatalia
+	systemctl restart numerologKristina
