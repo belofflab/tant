@@ -6,7 +6,7 @@ from .training import list_courses
 from data.config import VIKTORIA
 
 WORKER_NAME = "Виктории"
-WORKER_USERNAME = "viktoria_numer"
+V_WORKER_USERNAME = "viktoria_numer"
 
 askeza_buttons = {
     "1": {
@@ -27,7 +27,7 @@ askeza_buttons = {
         "description": f"""
 Чтобы задать интересующий вопрос или записаться на обучение напишите мне в личные слово «Обучение прогноз» ⬇️
 
-@{WORKER_USERNAME} 
+@{V_WORKER_USERNAME} 
 """,
     "whatsapp_btn": "https://api.whatsapp.com/send/?phone=79292084866&text=Привет!+Хочу+обучение+по+прогнозированию+за+12+000₽&type=phone_number&app_absent=0?"
     }
