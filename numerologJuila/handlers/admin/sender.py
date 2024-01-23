@@ -8,6 +8,7 @@ from utils import image, sender
 from filters.is_admin import IsAdmin
 from aiogram.dispatcher import FSMContext
 
+
 @dp.callback_query_handler(IsAdmin(), lambda c: c.data == "sender")
 async def sender_c(callback: types.CallbackQuery) -> None:
     markup = await inline.sender_keyboard()
@@ -122,7 +123,7 @@ async def setup_sender_text(message: types.Message, state: FSMContext) -> None:
                 )
 
                 return
-            
+
             data["text"] = message.parse_entities()
 
             await message.delete()
@@ -205,6 +206,9 @@ async def setup_sender_users(callback: types.CallbackQuery, state: FSMContext) -
     message = callback
     splitted_data = callback.data.split("#")
     users_template_id = splitted_data[2]
+    new_template = await models.SenderTemplate.query.where(
+        models.SenderTemplate.idx == int(users_template_id)
+    ).gino.first()
     async with state.proxy() as data:
         data["users_template_id"] = users_template_id
         if isinstance(message, types.Message):
@@ -234,9 +238,9 @@ async def setup_sender_users(callback: types.CallbackQuery, state: FSMContext) -
             await message.delete()
 
         await state.finish()
-        new_template = await models.SenderTemplate.create(
-            photo=data.get("photo"), text=data.get("text"), buttons=data.get("buttons")
-        )
+        # new_template = await models.SenderTemplate.create(
+        #     photo=data.get("photo"), text=data.get("text"), buttons=data.get("buttons")
+        # )
         await ask_for_sender_ready(
             message=message,
             state=state,
@@ -388,7 +392,9 @@ async def setup_sender_change(callback: types.CallbackQuery, state: FSMContext):
     if not len(splitted_data) > 3:
         template_id = splitted_data[1]
         users_template_id = splitted_data[2]
-        markup = await inline.setup_sender_change_keyboard(template_id, users_template_id)
+        markup = await inline.setup_sender_change_keyboard(
+            template_id, users_template_id
+        )
         await callback.message.delete()
         new_message = await callback.message.answer(
             "Что хотите изменить?", reply_markup=markup
