@@ -16,7 +16,7 @@ async def setup(message: types.Message) -> None:
         for service_type in service_types:
             await models.ServiceType.create(**service_type)
 
-    await models.Service.delete()
+    await models.Service.delete.gino.status()
 
     services = [
         {
