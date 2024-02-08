@@ -5,7 +5,7 @@ from typing import Union
 from aiogram import types
 import os
 import uuid
-from data.config import SERVER_URL, CHANNEL_ID, BASE_DIR, TRAINING_CHANNEL
+from data.config import SERVER_URL, CHANNEL_ID, BASE_DIR, TRAINING_CHANNEL, VIKTORIA
 from database import models
 from keyboards.user import inline
 from aiogram.dispatcher import FSMContext
@@ -80,7 +80,11 @@ async def list_courses(callback: types.CallbackQuery, worker: str, **kwargs):
             callback_data=inline.make_training_cd(level=0, worker=worker),
         )
     )
-    await callback.message.edit_caption("Выберите обучение:", reply_markup=markup)
+    if isinstance(callback, types.CallbackQuery):
+        await callback.message.edit_caption("Выберите обучение:", reply_markup=markup)
+    elif isinstance(callback, types.Message):
+        await callback.answer_photo(photo=types.InputFile(VIKTORIA), caption="Выберите обучение:", reply_markup=markup)
+
 
 
 async def get_or_buy_course(callback: types.CallbackQuery, worker: str, tid: str):

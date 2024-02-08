@@ -762,7 +762,10 @@ async def list_services(
 ) -> None:
     markup = await inline.services_keyboard(service_type, worker)
     text = "Чтобы узнать подробнее о каждом виде консультации, нажмите на соответствующую кнопку 👇"
-    await callback.message.edit_caption(caption=text, reply_markup=markup)
+    if isinstance(callback, types.CallbackQuery):
+        await callback.message.edit_caption(caption=text, reply_markup=markup)
+    elif isinstance(callback, types.Message):
+        await callback.answer_photo(photo=VIKTORIA, caption=text, reply_markup=markup)
 
 
 async def show_service(

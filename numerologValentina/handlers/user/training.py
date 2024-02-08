@@ -5,7 +5,7 @@ from typing import Union
 from aiogram import types
 import os
 import uuid
-from data.config import SERVER_URL, CHANNEL_ID, BASE_DIR, TRAINING_CHANNEL
+from data.config import SERVER_URL, CHANNEL_ID, BASE_DIR, TRAINING_CHANNEL, VALENTINA
 from math import ceil
 from database import models
 from keyboards.user import inline
@@ -58,21 +58,42 @@ async def get_or_buy_course(callback: types.CallbackQuery, worker: str, **kwargs
         expire_date=now + datetime.timedelta(minutes=30),
         member_limit=1,
     )
-    await callback.message.edit_caption(
-        caption=TRAINING_DESCRIPTION.format(worker=worker),
-        reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
-            types.InlineKeyboardButton(text="Смотреть курс", url=new_link.invite_link)
-            if is_active_subscription
-            else types.InlineKeyboardButton(
-                text="Купить",
-                callback_data=f"buy_training#{worker}",
+    if isinstance(callback, types.CallbackQuery):
+
+        await callback.message.edit_caption(
+            caption=TRAINING_DESCRIPTION.format(worker=worker),
+            reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
+                types.InlineKeyboardButton(text="Смотреть курс", url=new_link.invite_link)
+                if is_active_subscription
+                else types.InlineKeyboardButton(
+                    text="Купить",
+                    callback_data=f"buy_training#{worker}",
+                ),
+                types.InlineKeyboardButton(
+                    text="Назад",
+                    callback_data=inline.make_training_cd(level=0, worker=worker),
+                ),
             ),
-            types.InlineKeyboardButton(
-                text="Назад",
-                callback_data=inline.make_training_cd(level=0, worker=worker),
+        )
+
+    elif isinstance(callback, types.Message):
+        await callback.answer_photo(
+            photo=types.InputFile(VALENTINA),
+            caption=TRAINING_DESCRIPTION.format(worker=worker),
+            reply_markup=types.InlineKeyboardMarkup(row_width=1).add(
+                types.InlineKeyboardButton(text="Смотреть курс", url=new_link.invite_link)
+                if is_active_subscription
+                else types.InlineKeyboardButton(
+                    text="Купить",
+                    callback_data=f"buy_training#{worker}",
+                ),
+                types.InlineKeyboardButton(
+                    text="Назад",
+                    callback_data=inline.make_training_cd(level=0, worker=worker),
+                ),
             ),
-        ),
-    )
+        )
+
 
 
 @dp.callback_query_handler(
