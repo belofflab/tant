@@ -709,7 +709,7 @@ async def list_services(
     if isinstance(callback, types.CallbackQuery):
         await callback.message.edit_caption(caption=text, reply_markup=markup)
     else: 
-        await callback.answer_photo(photo=types.InputFile(VALENTINA), text=text, reply_markup=markup)
+        await callback.answer_photo(photo=types.InputFile(VALENTINA), caption=text, reply_markup=markup)
 
 async def show_service(
     callback: Union[types.CallbackQuery, types.Message], service_type: str, service: str, worker: str
