@@ -233,6 +233,13 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
         if account == "askeza":
             await proceed_signin(message=message)
             return await askeza.list_buttons(callback=message, worker="viktoria_numer")
+        if account == "services":
+            await proceed_signin(message=message)
+            return await list_services(callback=message, service_type="1", worker="viktoria_numer")
+        if account == "taro":
+            from .training import list_courses
+            await proceed_signin(message=message)
+            return await list_courses(callback=message, worker="viktoria_numer")
         if account == "course_numerology":
             await proceed_signin(message=message)
             return await numercourse.list_buttons(callback=message, worker="viktoria_numer")

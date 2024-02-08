@@ -226,6 +226,13 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
         if account == "askeza":
             await proceed_signin(message=message)
             return await list_buttons(callback=message, worker="valentina_numerologEnerg")
+        if account == "services":
+            await proceed_signin(message=message)
+            return await list_services(callback=message, service_type="1", worker="valentina_numerologEnerg")
+        if account == "taro":
+            from .training import get_or_buy_course
+            await proceed_signin(message=message)
+            return await get_or_buy_course(callback=message, worker="valentina_numerologEnerg")
         if account not in ["valentina_numerologEnerg",]:
             account = "valentina_numerologEnerg"
         await get_or_create_user(
