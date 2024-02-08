@@ -765,7 +765,7 @@ async def list_services(
     if isinstance(callback, types.CallbackQuery):
         await callback.message.edit_caption(caption=text, reply_markup=markup)
     elif isinstance(callback, types.Message):
-        await callback.answer_photo(photo=VIKTORIA, caption=text, reply_markup=markup)
+        await callback.answer_photo(photo=types.InputFile(VIKTORIA), caption=text, reply_markup=markup)
 
 
 async def show_service(
