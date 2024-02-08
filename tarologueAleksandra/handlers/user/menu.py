@@ -61,7 +61,7 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
             return await list_buttons(callback=message, worker="taro2_sashA")
         if account == "services":
             await proceed_signin(message=message)
-            return await list_services(callback=message, service_type="1", worker="valentina_numerologEnerg")
+            return await list_service_types(callback=message, worker="taro2_sashA")
         if account not in ["taro2_sashA", "sasha_tarolog"]:
             account = "taro2_sashA"
 

@@ -226,6 +226,9 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
         if account == "askeza":
             await proceed_signin(message=message)
             return await list_buttons(callback=message, worker="valentina_numerologEnerg")
+        if account == "free":
+            await proceed_signin(message=message)
+            return await free(callback=message, worker="valentina_numerologEnerg")
         if account == "services":
             await proceed_signin(message=message)
             return await list_services(callback=message, service_type="1", worker="valentina_numerologEnerg")
@@ -740,8 +743,7 @@ async def show_service(
 
 
 @dp.callback_query_handler(lambda c: c.data.startswith("free"))
-async def free(callback: types.CallbackQuery) -> None:
-    worker = callback.data.split("#")[-1]
+async def free(callback: types.CallbackQuery, **kwargs) -> None:
     requests.post(
         url=SERVER_URL + "/users/free/",
         headers={
@@ -756,15 +758,29 @@ async def free(callback: types.CallbackQuery) -> None:
             "worker": 9999,
         },
     )
-    await callback.message.edit_caption(
-        caption=f"""
+    if isinstance(callback, types.CallbackQuery):
+        worker = callback.data.split("#")[-1]
+        await callback.message.edit_caption(
+            caption=f"""
 Отправьте дату своего рождения мне в личном сообщении 
 <b>НАЖАТЬ</b> 👇🏻  @{worker}
 
 Пример: 12.09.1978
-""",
-        reply_markup=await inline.free_markup(worker=worker),
-    )
+    """,
+            reply_markup=await inline.free_markup(worker=worker),
+        )
+    if isinstance(callback, types.Message):
+        worker = kwargs.get("worker")
+        await callback.answer_photo(
+            photo=types.InputFile(VALENTINA),
+            caption=f"""
+Отправьте дату своего рождения мне в личном сообщении 
+<b>НАЖАТЬ</b> 👇🏻  @{worker}
+
+Пример: 12.09.1978
+    """,
+            reply_markup=await inline.free_markup(worker=worker),
+        )
 
 
 @dp.callback_query_handler(inline.bonus_cd.filter())
