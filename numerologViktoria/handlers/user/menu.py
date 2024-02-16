@@ -236,6 +236,10 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
         if account == "services":
             await proceed_signin(message=message)
             return await list_services(callback=message, service_type="1", worker="viktoria_numer")
+        if account == "timeoclock":
+            from .timeoclock import list_buttons
+            await proceed_signin(message=message)
+            return await list_buttons(callback=message, worker="viktoria_numer")
         if account == "taro":
             from .training import list_courses
             await proceed_signin(message=message)

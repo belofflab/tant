@@ -22,9 +22,13 @@ forecastcourse_cd = CallbackData(
     "show_forecastcourse", "level", "worker", "content_type", "content_page"
 )
 
-training_cd = CallbackData(
-    "show_training", "level", "worker", "tid"
-)
+training_cd = CallbackData("show_training", "level", "worker", "tid")
+
+timeockock_cd = CallbackData("show_timeoclock", "level", "worker", "cid",  "oid", "opage")
+
+
+def make_timeockock_cd(level, worker="viktoria_numer", cid ="0", oid="0", opage="1"):
+    return timeockock_cd.new(level=level, worker=worker, cid=cid, oid=oid,opage=opage)
 
 
 def make_service_cd(level, worker="viktoria_numer", type="0", service="0"):
@@ -54,15 +58,18 @@ def make_askeza_cd(level, worker="0", content_type="0", content_page="1"):
         level=level, worker=worker, content_type=content_type, content_page=content_page
     )
 
+
 def make_numcouse_cd(level, worker="0", content_type="0", content_page="1"):
     return numcourse_cd.new(
         level=level, worker=worker, content_type=content_type, content_page=content_page
     )
 
+
 def make_forecastcourse_cd(level, worker="0", content_type="0", content_page="1"):
     return forecastcourse_cd.new(
         level=level, worker=worker, content_type=content_type, content_page=content_page
     )
+
 
 def make_training_cd(level, worker="0", tid="0"):
     return training_cd.new(level=level, worker=worker, tid=tid)
@@ -96,8 +103,12 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
             "callback_data": make_service_cd(level=CURRENT_LEVEL + 1, worker=worker),
         },
         {
+            "text": "Время на часах 🕰️",
+            "callback_data": make_timeockock_cd(level=CURRENT_LEVEL + 1, worker=worker),
+        },
+        {
             "text": "Обучение 🔥",
-            "callback_data": make_training_cd(level=CURRENT_LEVEL + 1, worker=worker)
+            "callback_data": make_training_cd(level=CURRENT_LEVEL + 1, worker=worker),
         },
         {
             "text": "Прогноз 2024 (БОНУС)",
@@ -111,7 +122,7 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
         {"text": "Чат общения 👥", "url": "https://t.me/obschenie_kanal"},
         {"text": "Связаться со мной 📩", "url": "https://t.me/viktoria_numer"},
         {"text": "Мой сайт", "url": "https://taplink.cc/numerolog_viktoria.nikonova_"},
-        {"text": "Бонусы 🎁", "callback_data": f"bonus#{worker}"},
+        # {"text": "Бонусы 🎁", "callback_data": f"bonus#{worker}"},
         {"text": "ХОЧУ В КОМАНДУ", "callback_data": f"wanttoteam#{worker}"},
     ]
     for button in buttons:
@@ -171,9 +182,11 @@ async def list_matrix(worker: int, user_id: int, current_page: str = "1"):
             text=">>",
             callback_data=make_matrix_cd(
                 level=CURRENT_LEVEL,
-                page=(current_page + 1)
-                if not current_page >= MAX_PAGES
-                else current_page,
+                page=(
+                    (current_page + 1)
+                    if not current_page >= MAX_PAGES
+                    else current_page
+                ),
                 worker=worker,
             ),
         )
@@ -218,9 +231,11 @@ async def show_matrix(
                 level=CURRENT_LEVEL,
                 page=page,
                 request_id=request_id,
-                matrix_page=(current_page + 1)
-                if not current_page >= MAX_PAGES
-                else current_page,
+                matrix_page=(
+                    (current_page + 1)
+                    if not current_page >= MAX_PAGES
+                    else current_page
+                ),
                 worker=worker,
             ),
         )
@@ -303,7 +318,10 @@ async def show_service(
         InlineKeyboardButton(
             text=whatsapp_button,
             url="https://api.whatsapp.com/send/?phone=79292084866&text=Привет!+Хочу+{text}&type=phone_number&app_absent=0?".format(
-                text=q_service.name.replace("«", "").replace("»", "").replace(" ", "+") + "+за+" + str(q_service.amount) + "₽"
+                text=q_service.name.replace("«", "").replace("»", "").replace(" ", "+")
+                + "+за+"
+                + str(q_service.amount)
+                + "₽"
             ),
         ),
         InlineKeyboardButton(
