@@ -106,10 +106,10 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
             "text": "Время на часах 🕰️",
             "callback_data": make_timeockock_cd(level=CURRENT_LEVEL + 1, worker=worker),
         },
-        {
-            "text": "Обучение 🔥",
-            "callback_data": make_training_cd(level=CURRENT_LEVEL + 1, worker=worker),
-        },
+        # {
+        #     "text": "Обучение 🔥",
+        #     "callback_data": make_training_cd(level=CURRENT_LEVEL + 1, worker=worker),
+        # },
         {
             "text": "Прогноз 2024 (БОНУС)",
             "callback_data": f"s2024#{worker}",
