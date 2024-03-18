@@ -106,30 +106,17 @@ async def services_keyboard(service_type: str, worker: str) -> InlineKeyboardMar
         models.Service.type == int(service_type)
     ).gino.all()
     for idx, service in enumerate(services):
-        if idx == 2 and int(service_type) == 1:
-            markup.insert(
-                InlineKeyboardButton(
-                    text=service.name,
-                    callback_data=make_service_cd(
-                        CURRENT_LEVEL + 1,
-                        worker=worker,
-                        type=service_type,
-                        service=service.idx,
-                    ),
-                )
+        markup.row(
+            InlineKeyboardButton(
+                text=service.name,
+                callback_data=make_service_cd(
+                    CURRENT_LEVEL + 1,
+                    worker=worker,
+                    type=service_type,
+                    service=service.idx,
+                ),
             )
-        else:
-            markup.row(
-                InlineKeyboardButton(
-                    text=service.name,
-                    callback_data=make_service_cd(
-                        CURRENT_LEVEL + 1,
-                        worker=worker,
-                        type=service_type,
-                        service=service.idx,
-                    ),
-                )
-            )
+        )
     markup.add(
         InlineKeyboardButton(
             text="Назад",
