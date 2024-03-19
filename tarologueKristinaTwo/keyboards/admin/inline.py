@@ -2,6 +2,8 @@ from database import models
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from aiogram.utils.callback_data import CallbackData
 
+from data.config import SERVER_URL, WEB_APP_DOMAIN
+
 
 async def menu_keyboard():
     markup = InlineKeyboardMarkup()
@@ -11,7 +13,13 @@ async def menu_keyboard():
         {
             "text": "Аналитика",
             "web_app": WebAppInfo(
-                url="https://tant.belofflab.com/api/v1/analytics/info/"
+                url=f"{SERVER_URL}/api/v1/analytics/info/"
+            ),
+        },
+        {
+            "text": "Панель управления",
+            "web_app": WebAppInfo(
+                url=WEB_APP_DOMAIN
             ),
         },
     ]
