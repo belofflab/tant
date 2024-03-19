@@ -22,12 +22,6 @@ from aiohttp import web
 
 WEBHOOK_URL = WEB_APP_DOMAIN + WEB_APP_WEBHOOK
 
-
-class ShortCutView(web.View, CorsViewMixin):
-    async def get(self):
-        return web.Response(status=200)
-
-
 @dataclass
 class Serializer:
     @classmethod
@@ -165,46 +159,6 @@ class ServicesView(web.View, CorsViewMixin):
         return response
 
 
-class BillingView(web.View, CorsViewMixin):
-    async def get(self):
-        context = {"current_date": "January 27, 2017"}
-        response = aiohttp_jinja2.render_template(
-            "billing.html", self.request, context=context
-        )
-
-        return response
-
-
-class ProfileView(web.View, CorsViewMixin):
-    async def get(self):
-        context = {"current_date": "January 27, 2017"}
-        response = aiohttp_jinja2.render_template(
-            "profile.html", self.request, context=context
-        )
-
-        return response
-
-
-class DashboardView(web.View, CorsViewMixin):
-    async def get(self):
-        context = {"current_date": "January 27, 2017"}
-        response = aiohttp_jinja2.render_template(
-            "dashboard.html", self.request, context=context
-        )
-
-        return response
-
-
-class TablesView(web.View, CorsViewMixin):
-    async def get(self):
-        context = {"current_date": "January 27, 2017"}
-        response = aiohttp_jinja2.render_template(
-            "tables.html", self.request, context=context
-        )
-
-        return response
-
-
 async def on_startup(app: Application):
     await db.set_bind(DATABASE_URL)
     aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(BASE_DIR / "templates"))
@@ -216,14 +170,9 @@ async def on_startup(app: Application):
             )
         },
     )
-    cors.add(app.router.add_view("/s/{shortcut_id}", ShortCutView))
     cors.add(app.router.add_view("/", IndexView))
     cors.add(app.router.add_view("/service/types/", ServiceTypesView))
     cors.add(app.router.add_view("/services/", ServicesView))
-    cors.add(app.router.add_view("/pages/billing", BillingView))
-    cors.add(app.router.add_view("/pages/profile", ProfileView))
-    cors.add(app.router.add_view("/pages/tables", TablesView))
-    cors.add(app.router.add_view("/pages/dashboard", DashboardView))
 
     cors.add(app.router.add_view("/api/service/types/", ServiceTypesAPIView))
     cors.add(app.router.add_view("/api/services/", ServicesAPIView))
