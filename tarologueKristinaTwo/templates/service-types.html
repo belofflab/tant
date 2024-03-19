@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% include 'forms/update_service_types.html' %}
+
+{% block main %}
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
+    <div class="container-fluid py-1 px-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+          <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Страницы</a></li>
+          <li class="breadcrumb-item text-sm text-white active" aria-current="page">Категории</li>
+        </ol>
+        <h6 class="font-weight-bolder text-white mb-0">Категории</h6>
+      </nav>
+    </div>
+  </nav>
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-md-12 mt-4">
+        <div class="card">
+          <div class="card-header pb-0 px-3">
+            <div class="row">
+              <div class="col-md-7">
+                <h6 class="mb-0">Категории услуг</h6>
+              </div>
+              <div class="col-md-5">
+                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#updateServiceTypeModal">Добавить</button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-4 p-3">
+            <ul class="list-group" id="service_types"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="http://127.0.0.1:3490/static/argon/js/service-types.js"></script>
+{% endblock %}

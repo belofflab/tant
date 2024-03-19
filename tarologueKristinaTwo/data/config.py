@@ -19,4 +19,10 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 DATABASE_URL = os.getenv("DATABASE_URL")
 CHANNEL_ID = int(os.getenv("CHANNEL_ID", -100))
 ADMIN_IDS = os.getenv("ADMIN_IDS").split()
+
+WEB_APP_DOMAIN = os.getenv("WEB_APP_DOMAIN", "...TODO")
+WEB_APP_HOST = os.getenv("WEB_APP_HOST", "0.0.0.0")
+WEB_APP_PORT = int(os.getenv("WEB_APP_PORT", 8000))
+WEB_APP_WEBHOOK = os.getenv("WEB_APP_WEBHOOK", "/hook")
+
 SERVER_URL = os.getenv("SERVER_URL")

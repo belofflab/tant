@@ -1,0 +1,30 @@
+version: "3"
+services:
+  bot:
+    build:
+      context: './'
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "1000:8000"
+    networks:
+      - project-network
+
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpassword
+      POSTGRES_DB: dbname
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - project-network
+
+networks:
+  project-network:
+
+volumes:
+  postgres_data:

@@ -1,0 +1,11 @@
+aiogram==2.25.1
+gino
+aiohttp-jinja2
+jinja2
+aiohttp_cors
+python-dotenv
+alembic
+psycopg2-binary
+pyqiwip2p
+requests
+aiohttp_cors

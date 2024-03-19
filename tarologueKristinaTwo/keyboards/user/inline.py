@@ -2,6 +2,8 @@ from database import models
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.callback_data import CallbackData
 
+from data.config import WORKER_USERNAME
+
 service_cd = CallbackData("show_service", "level", "worker", "type", "service")
 askeza_cd = CallbackData(
     "show_askeza", "level", "worker", "content_type", "content_page"
@@ -18,7 +20,7 @@ training_cd = CallbackData(
     "show_training", "level", "worker", "tid"
 )
 
-def make_service_cd(level, worker="taro2_sashA", type="0", service="0"):
+def make_service_cd(level, worker=WORKER_USERNAME, type="0", service="0"):
     return service_cd.new(level=level, worker=worker, type=type, service=service)
 
 def make_askeza_cd(level, worker="0", content_type="0", content_page="1"):

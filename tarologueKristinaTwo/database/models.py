@@ -19,11 +19,11 @@ db = Gino()
 class User(db.Model):
     __tablename__ = "users"
     idx: int = Column(BigInteger, primary_key=True)
-    username: str = Column(String(255))
-    first_name: str = Column(String(255), nullable=True)
-    last_name: str = Column(String(255), nullable=True)
-
+    username: str = Column(String(255), nullable=True)
+    full_name: str = Column(String(255))
     is_active: bool = Column(Boolean, default=True)
+    created_at: datetime.datetime = Column(DateTime, default=datetime.datetime.now)
+    last_active: datetime.datetime = Column(DateTime, default=datetime.datetime.now)
 
 
 class ServiceType(db.Model):
@@ -35,7 +35,7 @@ class Service(db.Model):
     __tablename__ = "services"
     idx: int = Column(BigInteger, Sequence("services_idx_seq"), primary_key=True)
 
-    type: ServiceType = Column(ForeignKey("service_types.idx"))
+    type: ServiceType = Column(ForeignKey("service_types.idx", ondelete="CASCADE"), nullable=True)
 
     name: str = Column(String(255))
     description: str = Column(String(1024))

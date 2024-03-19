@@ -1,0 +1,36 @@
+<div class="modal fade" id="updateServiceTypeModal" tabindex="-1" aria-labelledby="addressee_info" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="ServiceTypeTitle">Изменение/добавление категории</h5>
+              <button style="font-size: 25px; color: black;" type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-xl-12">
+                      <div class="card mb-4">
+                          <div class="container">
+                            <form name="address_inf" method="post">
+                                <input type="hidden" id="serviceTypeIdx" value="">
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="form-outline">
+                                            <input type="text" id="serviceTypeName" name="serviceTypeName"
+                                                class="form-control" required>
+                                            <label class="form-label" for="serviceTypeName">Наименование</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="serviceTypeSave" type="submit"
+                                    class="btn btn-primary btn-block mb-4">Сохранить</button>
+                            </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
