@@ -16,4 +16,4 @@ if __name__ == "__main__":
         },
     )
     cors.add(app.router.add_static('/static/', path='./static/', name='static'))
-    web.run_app(app, host="0.0.0.0", port=9-)
+    web.run_app(app, host="0.0.0.0", port=3490)
