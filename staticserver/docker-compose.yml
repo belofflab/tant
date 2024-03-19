@@ -4,8 +4,6 @@ services:
     build:
       context: './'
       dockerfile: Dockerfile
-    depends_on:
-      - db
     ports:
       - "3490:3490"
     networks:
