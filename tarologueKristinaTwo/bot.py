@@ -49,6 +49,7 @@ class IndexView(web.View, CorsViewMixin):
             "active_users_today": active_users_today,
             "services": services,
             "service_types": service_types,
+            "page_name": "Аналитика"
         }
         response = aiohttp_jinja2.render_template(
             "index.html", self.request, context=context
@@ -93,7 +94,7 @@ class ServiceTypesAPIView(web.View, CorsViewMixin):
 class ServiceTypesView(web.View, CorsViewMixin):
     async def get(self):
         response = aiohttp_jinja2.render_template(
-            "service-types.html", self.request, context={}
+            "service-types.html", self.request, context={"page_name": "Категории"}
         )
 
         return response
@@ -153,7 +154,7 @@ class ServicesAPIView(web.View, CorsViewMixin):
 class ServicesView(web.View, CorsViewMixin):
     async def get(self):
         response = aiohttp_jinja2.render_template(
-            "services.html", self.request, context={}
+            "services.html", self.request, context={"page_name": "Услуги"}
         )
 
         return response
