@@ -120,18 +120,18 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
         from . import askeza
         account = message.get_args()
         if account == "askeza":
-            await proceed_signin(message=message)
+            await proceed_signin(message=message, worker_name=WORKER_USERNAME)
             return await askeza.list_buttons(callback=message, worker=WORKER_USERNAME)
         if account == "services":
             from .services import list_service_types
-            await proceed_signin(message=message)
+            await proceed_signin(message=message, worker_name=WORKER_USERNAME)
             return await list_service_types(callback=message,  worker=WORKER_USERNAME)
         if account == "taro":
             from .training import list_courses
-            await proceed_signin(message=message)
+            await proceed_signin(message=message, worker_name=WORKER_USERNAME)
             return await list_courses(callback=message, worker=WORKER_USERNAME)
         if account == "free":
-            await proceed_signin(message=message)
+            await proceed_signin(message=message, worker_name=WORKER_USERNAME)
             return await free(callback=message, worker=WORKER_USERNAME)
         if account not in [WORKER_USERNAME, ]:
             account = WORKER_USERNAME
