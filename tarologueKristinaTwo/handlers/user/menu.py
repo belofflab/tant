@@ -128,11 +128,11 @@ async def free(callback: types.CallbackQuery) -> None:
     asyncio.get_event_loop().create_task(update_user_touch(callback=callback))
     await callback.message.edit_caption(
         caption=f"""
-Раздел Бесплатная консультация на тему энергия текущего года: 
-Отправь дату своего рождения мне в личном сообщении 
-<b>НАЖАТЬ</b> 👉🏻  @{worker}
+Отправьте дату своего рождения мне в личном сообщении  
+<b>НАЖАТЬ</b> 👇🏻  
+@{worker}
 
-Пример: 10.04.1976
+Пример: 12.09.1978
 
 """,
         reply_markup=await inline.free_markup(worker=worker),
