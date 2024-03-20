@@ -10,7 +10,7 @@ services:
       - "1000:8000"
     networks:
       - project-network
-    entrypoint: /bin/bash -c "sleep 1 && /app/entrypoint.sh"
+    # entrypoint: /bin/bash -c "sleep 1 && /app/entrypoint.sh"
 
   db:
     image: postgres:latest
