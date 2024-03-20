@@ -14,6 +14,7 @@ if os.path.exists(ENV_FILE):
     load_dotenv(ENV_FILE)
 
 WORKER_USERNAME = os.getenv("WORKER_USERNAME")
+BOT_UUID = os.getenv("BOT_UUID")
 TRAINING_CHANNEL = -100 # TODO
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 DATABASE_URL = os.getenv("DATABASE_URL")

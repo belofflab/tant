@@ -71,7 +71,7 @@ function elementUpdate(idx) {
   let currentElement = currentElements.find(element => element.idx === parseInt(idx));
   $("#servicesIdx").val(currentElement.idx);
   $("#servicesName").val(currentElement.name);
-  $("#servicesDescription").val(currentElement.description);
+  tinymce.activeEditor.setContent(currentElement.description);
   $("#servicesPrice").val(currentElement.amount);
   renderServiceTypes(currentElement.type);
 }
@@ -80,7 +80,8 @@ function elementSave() {
   const servicesIdx = $("#servicesIdx").val();
   var selectedOption = $('#serviceTypeSelect option:selected').val();
   var servicesName = $("#servicesName").val();
-  var servicesDescription = $("#servicesDescription").val();
+  var servicesDescription = tinymce.activeEditor.getContent();
+  console.log(servicesDescription )
   var servicesPrice = $("#servicesPrice").val();
   if (!servicesName.length > 0) {
     return alert("Минимум 1 символ!");
@@ -142,7 +143,8 @@ $(document).ready(function () {
     isUpdate = false;
     $("#servicesName").val("");
     $("#servicesIdx").val("");
-    $("#servicesDescription").val("");
+    tinymce.activeEditor.setContent("");
+
     $("#servicesPrice").val("");
     $("#serviceTypeSelect").empty();
   })

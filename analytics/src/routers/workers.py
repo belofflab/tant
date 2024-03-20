@@ -10,7 +10,7 @@ router = APIRouter(prefix="/api/v1/workers", tags=["Работники"])
 
 @router.get("/{worker_id}")
 async def get_worker(worker_id: int) -> schemas.Worker:
-    s_worker = await Worker.objects.get_or_none(id=worker_id)
+    s_worker = await Worker.objects.get_or_none(user__id=worker_id)
     if not s_worker:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Вас нет в системе"
@@ -55,13 +55,8 @@ async def get_workers_rates(
 
 @router.post("/")
 async def update_or_create_worker(worker: schemas.WorkerCreate = Depends()):
-    s_worker = await Worker.objects.get_or_none(id=worker.id)
-    # s_user = await User.objects.get_or_none(id=worker.id)
+    s_worker = await Worker.objects.get_or_none(user__id=worker.user)
     s_proxy = await Proxy.objects.get_or_none(id=worker.proxy)
-
-    # if s_user is None:
-    #     await User.objects.create(id=worker.id, username=worker.username)
-
     if s_proxy is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -78,15 +73,9 @@ async def update_or_create_worker(worker: schemas.WorkerCreate = Depends()):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Работник уже подключен к системе",
         )
-
     new_worker = await Worker.objects.create(
-        id=worker.id,
         name=worker.name,
-        username=worker.username,
-        freezed_amount=0,
-        comission=50,
-        api_hash=worker.api_hash,
-        api_id=worker.api_id,
+        user=worker.user,
         proxy=worker.proxy,
     )
 
@@ -100,7 +89,7 @@ async def get_workers() -> t.List[schemas.Worker]:
 
 @router.post("/fill/")
 async def fill_worker_amount(worker: schemas.WorkerAmountUpdate):
-    s_worker = await Worker.objects.get_or_none(id=worker.id)
+    s_worker = await Worker.objects.get_or_none(user__id=worker.id)
     if s_worker is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Работник не найден"
@@ -111,7 +100,7 @@ async def fill_worker_amount(worker: schemas.WorkerAmountUpdate):
 
 @router.post("/disable/{worker}")
 async def disable_worker(worker: int):
-    s_worker = await Worker.objects.get_or_none(id=worker)
+    s_worker = await Worker.objects.get_or_none(user__id=worker)
     if s_worker is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Работник не найден"

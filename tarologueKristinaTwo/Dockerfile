@@ -11,7 +11,4 @@ RUN /app/venv/bin/pip install -r requirements.txt
 
 COPY . .
 
-CMD ["/app/venv/bin/python", "bot.py"]
-
-
 EXPOSE 8000

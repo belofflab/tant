@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from decimal import Decimal
 from src.database.models import TransactionType
 from fastapi import Depends
+from uuid import UUID
 
 class ProxyCreate(BaseModel):
    host: str
@@ -20,12 +21,9 @@ class WorkerAmountUpdate(BaseModel):
    amount: Decimal
 
 class WorkerCreate(BaseModel):
-   id: int
-   name: str
-   username: t.Optional[str] = None
-   api_hash: str
-   api_id: int
+   user: int
    proxy: int
+   name: str
 
 class Worker(WorkerCreate):
    amount: Decimal
@@ -33,10 +31,9 @@ class Worker(WorkerCreate):
 
 class UserCreate(BaseModel):
    id: int
-   first_name: t.Optional[str]
-   last_name: t.Optional[str]
+   full_name: str
    username: t.Optional[str]
-   worker: int
+   worker_bot: UUID
 
 class User(UserCreate):  
   last_activity: datetime.datetime

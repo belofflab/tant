@@ -83,12 +83,26 @@ async def service_types_keyboard(worker: str) -> InlineKeyboardMarkup:
     CURRENT_LEVEL = 1
     markup = InlineKeyboardMarkup()
     service_types = await models.ServiceType.query.gino.all()
+    services = await models.Service.query.where(
+        models.Service.type == None
+    ).gino.all()
     for service_type in service_types:
         markup.row(
             InlineKeyboardButton(
                 text=service_type.name,
                 callback_data=make_service_cd(
                     CURRENT_LEVEL + 1, worker, service_type.idx
+                ),
+            )
+        )
+    for service in services:
+        markup.row(
+            InlineKeyboardButton(
+                text=service.name,
+                callback_data=make_service_cd(
+                    CURRENT_LEVEL + 2,
+                    worker=worker,
+                    service=service.idx,
                 ),
             )
         )
@@ -139,7 +153,7 @@ async def show_service(
         InlineKeyboardButton(
             text="Назад",
             callback_data=make_service_cd(
-                CURRENT_LEVEL - 1, worker=worker, type=service_type, service=service
+                CURRENT_LEVEL - (1 if service_type != "0" else 2), worker=worker, type=service_type, service=service
             ),
         )
     )

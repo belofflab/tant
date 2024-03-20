@@ -65,7 +65,7 @@ async def get_info() -> dict:
 
 @router.post("/reward/")
 async def reward(worker_request: schemas.WorkerRequestCreate):
-    s_worker = await Worker.objects.get_or_none(id=worker_request.worker)
+    s_worker = await Worker.objects.get_or_none(user__id=worker_request.worker)
     await WorkerRequest.objects.create(
         worker=s_worker,
         # amount=-worker_request.amount,
@@ -79,7 +79,7 @@ async def reward(worker_request: schemas.WorkerRequestCreate):
 
 @router.post("/penalty/")
 async def penalty(worker_request: schemas.WorkerRequestCreate):
-    s_worker = await Worker.objects.get_or_none(id=worker_request.worker)
+    s_worker = await Worker.objects.get_or_none(user__id=worker_request.worker)
     await WorkerRequest.objects.create(
         worker=s_worker,
         # amount=-worker_request.amount,

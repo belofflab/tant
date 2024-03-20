@@ -1,24 +1,25 @@
 version: "3"
 services:
-  bot:
+  tapi:
     build:
       context: './'
       dockerfile: Dockerfile
+    container_name: tapi
     depends_on:
-      - db
+      - tdb
     ports:
-      - "1000:8000"
+      - "8000:8000"
     networks:
       - project-network
-    entrypoint: /bin/bash -c "sleep 1 && /app/entrypoint.sh"
+    entrypoint: /bin/bash -c "sleep 1 && /opt/backend/entrypoint.sh"
 
-  db:
+  tdb:
     image: postgres:latest
-    container_name: db
+    container_name: tdb
     environment:
-      POSTGRES_USER: dbuser
-      POSTGRES_PASSWORD: dbpassword
-      POSTGRES_DB: dbname
+      POSTGRES_USER: konstantin
+      POSTGRES_PASSWORD: Lp2nZxYOCcPhzrXj
+      POSTGRES_DB: tant
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:

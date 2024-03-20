@@ -10,12 +10,13 @@ from src.routers import (
     workers,
     analytics,
     proxies,
-    transitions,
+    # transitions,
     admin,
     messages,
     worker_requests,
     admin_requests,
-    matrix_requests
+    worker_bots
+    # matrix_requests
 )
 
 app = FastAPI()
@@ -57,9 +58,10 @@ app.include_router(proxies.router)
 app.include_router(analytics.router)
 app.include_router(users.router)
 app.include_router(worker_requests.router)
-app.include_router(matrix_requests.router)
+# app.include_router(matrix_requests.router)
 app.include_router(messages.router)
 app.include_router(workers.router)
+app.include_router(worker_bots.router)
 app.include_router(admin.router)
-app.include_router(transitions.router)
+# app.include_router(transitions.router)
 app.include_router(admin_requests.router)
