@@ -17,7 +17,7 @@ async def total_chats(
 ):
     filter_params = {}
     if worker is not None:
-        s_worker = await Worker.objects.get_or_none(user__id=worker)
+        s_worker = await Worker.objects.get_or_none(id=worker)
         if s_worker:
             filter_params["worker"] = s_worker
         else:

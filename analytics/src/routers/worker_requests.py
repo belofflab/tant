@@ -13,7 +13,7 @@ async def create(
     worker_request: schemas.WorkerRequestCreate = Depends(),
     receipt: t.Optional[UploadFile] = File(default=None),
 ) -> schemas.WorkerRequest:
-    worker = await Worker.objects.get_or_none(user__id=worker_request.worker)
+    worker = await Worker.objects.get_or_none(id=worker_request.worker)
     if not worker:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Работник не найден"
@@ -83,7 +83,7 @@ async def get_all() -> t.List[schemas.WorkerRequest]:
 
 @router.get("/{worker}/")
 async def get_by_worker(worker: int) -> t.List[schemas.WorkerRequest]:
-    s_worker = await Worker.objects.get_or_none(user__id=worker)
+    s_worker = await Worker.objects.get_or_none(id=worker)
     if s_worker is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Работник не найден"
@@ -97,7 +97,7 @@ async def update_status(
     worker_request: schemas.WorkerRequestPatch,
 ) -> schemas.WorkerRequest:
     s_worker_request = await WorkerRequest.objects.get_or_none(id=worker_request.id)
-    s_worker = await Worker.objects.get(user__id=s_worker_request.worker)
+    s_worker = await Worker.objects.get(id=s_worker_request.worker)
     if not worker_request:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Заявка не найдена"

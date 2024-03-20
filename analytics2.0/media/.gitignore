@@ -1,0 +1,11 @@
+receipts/*
+!receipts/__init__.py
+
+matrix/*
+!matrix/__init__.py
+
+voices/*
+!voices/__init__.py
+
+photos/*
+!photos/__init__.py

@@ -14,7 +14,7 @@ templates = Jinja2Templates(directory="templates")
 async def create(message: schemas.MessageCreate) -> schemas.Message:
     sender = await User.objects.get_or_none(id=message.sender)
     receiver = await User.objects.get_or_none(id=message.receiver)
-    worker = await Worker.objects.get_or_none(user__id=message.sender)
+    worker = await Worker.objects.get_or_none(id=message.sender)
 
     if receiver is None:
         receiver = await User.objects.create(id=message.receiver, worker=worker)
