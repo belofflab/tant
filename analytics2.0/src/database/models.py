@@ -66,6 +66,14 @@ class WorkerConnection(ormar.Model):
   api_id: int = ormar.BigInteger()
   api_hash: str = ormar.String(max_length=1024)
 
+class WorkerUser(ormar.Model):
+  class Meta(BaseMeta):
+    tablename="worker_users"
+    constraints=[UniqueColumns("worker", "user")]
+  id: int = ormar.BigInteger(primary_key=True)
+  worker = ormar.ForeignKey(Worker)
+  user: User = ormar.ForeignKey(User)
+
 class Bot(ormar.Model):
   class Meta(BaseMeta):
     tablename="bots"
