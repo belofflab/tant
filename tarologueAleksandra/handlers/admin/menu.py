@@ -106,7 +106,7 @@ async def setup(message: types.Message) -> None:
 «Прогноз»
 """,
 
-    "amount": "5500",
+    "amount": "0",
         },
         {
             "name": "Детский разбор от 0 до 3",
