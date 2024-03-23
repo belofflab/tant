@@ -15,38 +15,6 @@ MENU_CAPTION = """
 Меня зовут Кристина. Я сертифицированый таролог. Отвечу на любой волнующий вопрос и сниму тревоги. Расставим вместе все точки над “I”. Чтобы нам стать ближе, жми кнопку бесплатная  консультация, увидимся 💗
 """
 
-# async def save_user(message: types.Message):
-#     requests.post(
-#         url=SERVER_URL + f"/users/",
-#         headers={
-#             "accept": "application/json",
-#             "Content-Type": "application/json",
-#         },
-#         json={
-#             "id": message.from_user.id,
-#             "username": message.from_user.username,
-#             "first_name": message.from_user.full_name,
-#             "worker_bot": BOT_UUID,
-#         },
-#     )
-
-
-# async def update_user_touch(callback: types.CallbackQuery):
-#     requests.post(
-#         url=SERVER_URL + "/users/free/",
-#         headers={
-#             "accept": "application/json",
-#             "Content-Type": "application/json",
-#         },
-#         json={
-#             "id": callback.from_user.id,
-#             "username": callback.from_user.username,
-#             "first_name": callback.from_user.full_name,
-#             "worker_bot": BOT_UUID,
-#         },
-#     )
-
-
 async def get_or_create_user(user_id: int, username: str, full_name: str) -> models.User:
     user = await models.User.query.where(models.User.idx == user_id).gino.first()
     if user is not None:

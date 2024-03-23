@@ -29,14 +29,14 @@ class User(db.Model):
 class ServiceType(db.Model):
     __tablename__ = "service_types"
     idx: int = Column(BigInteger, Sequence("service_types_idx_seq"), primary_key=True)
+    photo: str = Column(String(255), nullable=True)
     name: str = Column(String(255))
 
 class Service(db.Model):
     __tablename__ = "services"
     idx: int = Column(BigInteger, Sequence("services_idx_seq"), primary_key=True)
-
+    photo: str = Column(String(255), nullable=True)
     type: ServiceType = Column(ForeignKey("service_types.idx", ondelete="CASCADE"), nullable=True)
-
     name: str = Column(String(255))
     description: str = Column(String(1024))
     amount: Decimal = Column(Numeric(12, 2))

@@ -2,22 +2,37 @@ from aiogram import types
 from database import models
 from keyboards.user import inline
 from loader import dp
+from data.config import BASE_DIR, WORKER_PHOTO
 from .menu import start
 
 
 async def list_service_types(callback: types.CallbackQuery, worker, **kwargs) -> None:
-    markup = await inline.service_types_keyboard(worker=worker)
+    service_types = await models.ServiceType.query.gino.all()
+    services = await models.Service.query.where(
+        models.Service.type == None
+    ).gino.all()
+    markup = await inline.service_types_keyboard(worker=worker, service_types=service_types, services=services)
     text = "Чтобы узнать подробнее о каждом виде консультации, нажмите на соответствующую кнопку 👇"
-    await callback.message.edit_caption(caption=text, reply_markup=markup)
+
+    await callback.message.edit_media(media=types.InputMediaPhoto(
+                media=types.InputFile(WORKER_PHOTO),caption=text), reply_markup=markup)
 
 
 async def list_services(
     callback: types.CallbackQuery, service_type: str, worker: str, **kwargs
 ) -> None:
-    markup = await inline.services_keyboard(service_type, worker)
+    service_type = await models.ServiceType.query.where(models.ServiceType.idx == int(service_type)).gino.first()
+    if not service_type:
+        return
+    services = await models.Service.query.where(
+        models.Service.type == service_type.idx
+    ).gino.all()
+    markup = await inline.services_keyboard(service_type, worker, services)
     text = "Чтобы узнать подробнее о каждом виде консультации, нажмите на соответствующую кнопку 👇"
-    await callback.message.edit_caption(caption=text, reply_markup=markup)
-
+    if service_type.photo:
+        await callback.message.edit_media(media=types.InputMediaPhoto(media=types.InputFile(BASE_DIR / service_type.photo), caption=text), reply_markup=markup)
+    else:
+        await callback.message.edit_caption(caption=text, reply_markup=markup)
 
 async def show_service(
     callback: types.CallbackQuery, service_type: str, service: str, worker: str

@@ -79,13 +79,9 @@ async def menu_keyboard(worker: str) -> InlineKeyboardMarkup:
     return markup
 
 
-async def service_types_keyboard(worker: str) -> InlineKeyboardMarkup:
+async def service_types_keyboard(worker: str, service_types, services) -> InlineKeyboardMarkup:
     CURRENT_LEVEL = 1
     markup = InlineKeyboardMarkup()
-    service_types = await models.ServiceType.query.gino.all()
-    services = await models.Service.query.where(
-        models.Service.type == None
-    ).gino.all()
     for service_type in service_types:
         markup.row(
             InlineKeyboardButton(
@@ -114,13 +110,10 @@ async def service_types_keyboard(worker: str) -> InlineKeyboardMarkup:
     return markup
 
 
-async def services_keyboard(service_type: str, worker: str) -> InlineKeyboardMarkup:
+async def services_keyboard(service_type, worker: str, services) -> InlineKeyboardMarkup:
     CURRENT_LEVEL = 2
     # service_type = 1
     markup = InlineKeyboardMarkup()
-    services = await models.Service.query.where(
-        models.Service.type == int(service_type)
-    ).gino.all()
     for idx, service in enumerate(services):
         markup.row(
             InlineKeyboardButton(
@@ -128,7 +121,7 @@ async def services_keyboard(service_type: str, worker: str) -> InlineKeyboardMar
                 callback_data=make_service_cd(
                     CURRENT_LEVEL + 1,
                     worker=worker,
-                    type=service_type,
+                    type=service_type.idx,
                     service=service.idx,
                 ),
             )
@@ -137,7 +130,7 @@ async def services_keyboard(service_type: str, worker: str) -> InlineKeyboardMar
         InlineKeyboardButton(
             text="Назад",
             callback_data=make_service_cd(
-                CURRENT_LEVEL - 1, worker=worker, type=service_type
+                CURRENT_LEVEL - 1, worker=worker, type=service_type.idx
             ),
         )
     )

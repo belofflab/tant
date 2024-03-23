@@ -9,8 +9,8 @@ from filters.is_admin import IsAdmin
 @dp.message_handler(IsAdmin(), commands="setup")
 async def setup(message: types.Message) -> None:
     service_types = [
-        {"idx": 1, "name": "Консультации"},
-        {"idx": 2, "name": "Ритуалы"},
+        {"idx": 1, "name": "Консультации", "photo": "data/4.jpg"},
+        {"idx": 2, "name": "Ритуалы", "photo": "data/2.jpg"},
     ]
 
     if not len(await models.ServiceType.query.gino.all()) > 0:
@@ -68,7 +68,7 @@ async def setup(message: types.Message) -> None:
             "amount": "2800",
         },
         {
-            "name": "работа",
+            "name": "Работа",
             "type": 1,
             "description": """
 1. Что даст Вам новая работа? 2. Работа: уходить или остаться ?
@@ -80,7 +80,7 @@ async def setup(message: types.Message) -> None:
             "amount": "2800",
         },
         {
-            "name": "отношения",
+            "name": "Отношения",
             "type": 1,
             "description": """
 1. Блядун или показалось? 
@@ -111,7 +111,7 @@ async def setup(message: types.Message) -> None:
             "amount": "2800",
         },
         {
-            "name": "авторские расклады",
+            "name": "Авторские расклады",
             "type": 1,
             "description": """
 1. Расклад как пройдёт отпуск? 
