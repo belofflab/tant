@@ -56,7 +56,7 @@ async def proceed_signin(message, worker_name):
             "username": message.from_user.username,
             "first_name": message.from_user.first_name,
             "last_name": message.from_user.last_name,
-            "worker": 567890, # WORKER ID 
+            "worker": 827162, # WORKER ID 
         },
     )
 async def save_user(worker_name: str, message: types.Message):
@@ -71,7 +71,7 @@ async def save_user(worker_name: str, message: types.Message):
                 "username": message.from_user.username,
                 "first_name": message.from_user.first_name,
                 "last_name": message.from_user.last_name,
-                "worker": 567890, # WORKER ID 
+                "worker": 827162, # WORKER ID 
             },
         )
     
@@ -87,7 +87,7 @@ async def update_user_touch(callback: types.CallbackQuery):
                 "username": callback.from_user.username,
                 "first_name": callback.from_user.first_name,
                 "last_name": callback.from_user.last_name,
-                "worker": 567890,
+                "worker": 827162,
             },
         )
 
