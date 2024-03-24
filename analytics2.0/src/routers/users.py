@@ -46,12 +46,6 @@ async def get_or_create_user(user: schemas.UserCreate) -> schemas.User:
 
     return s_user
 
-@router.post("/free/")
-async def update_user_free(user: schemas.UserCreate) -> schemas.User:
-    s_user = await User.objects.get_or_none(id=user.id)
-    return await s_user.update(is_free_consulting=True)
-
-
 @router.get("/{user}/payment/details/")
 async def get_user_payment_details(user: int) -> schemas.UserPaymentDetail:
     s_user = await User.objects.get_or_none(id=user)

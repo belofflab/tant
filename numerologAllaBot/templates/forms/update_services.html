@@ -1,0 +1,60 @@
+<div class="modal fade" id="updateServicesModal" tabindex="-1" aria-labelledby="addressee_info" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="servicesTitle">Изменение/добавление услуги</h5>
+              <button style="font-size: 25px; color: black;" type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-xl-12">
+                      <div class="card mb-4">
+                          <div class="container">
+                            <form name="address_inf" method="post">
+                                <input type="hidden" id="servicesIdx" value="">
+                                <div class="row mb-4">
+                                    <div class="col-md-12">
+                                        <div class="form-outline">
+                                            <input type="text" id="servicesName" name="servicesName"
+                                                class="form-control" required>
+                                            <label class="form-label" for="servicesName">Наименование</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-12">
+                                        <div class="form-outline">
+                                            <textarea rows="8" type="text" id="servicesDescription" name="servicesDescription"
+                                                class="form-control" required></textarea>
+                                            <label class="form-label" for="servicesDescription">Описание</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <div class="form-outline">
+                                            <input type="text" id="servicesPrice" name="servicesPrice"
+                                                class="form-control" required>
+                                            <label class="form-label" for="servicesPrice">Цена</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-outline">
+                                            <select name="servicesType" class="form-control" id="serviceTypeSelect"></select>
+                                            <label class="form-label" for="servicesPrice">Категория</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="servicesSave" type="submit"
+                                    class="btn btn-primary btn-block mb-4">Сохранить</button>
+                            </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

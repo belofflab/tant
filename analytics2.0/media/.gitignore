@@ -9,3 +9,6 @@ voices/*
 
 photos/*
 !photos/__init__.py
+
+bots/*
+!bots/__init__.py

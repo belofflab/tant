@@ -12,3 +12,4 @@ if os.path.exists(ENV_FILE):
 
 ALLOWED_ORIGINS = os.getenv('ALLOWED_ORIGINS').split()
 DATABASE_URL = os.getenv('DATABASE_URL')
+SECRET_KEY = "supersecret"

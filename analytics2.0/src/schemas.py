@@ -124,3 +124,12 @@ class MatrixRequest(BaseModel):
    dob: t.Optional[str]
    image: t.Optional[str]
    result: t.Optional[str]
+
+
+class BotCreate(BaseModel):
+   main_description: str = "Описание"
+   service_description: str = "Чтобы узнать подробнее о каждом виде консультации, нажмите на соответствующую кнопку 👇"
+
+class Bot(BotCreate):
+   id: int
+   uid:UUID

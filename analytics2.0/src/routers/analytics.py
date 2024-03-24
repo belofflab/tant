@@ -2,7 +2,7 @@ import statistics
 from datetime import datetime, timedelta
 
 from fastapi import APIRouter, HTTPException, status, Query
-from src.database.models import User, Worker, Transition, WorkerRequest, TransactionType
+from src.database.models import User, Worker, Transition, WorkerRequest, TransactionType, WorkerUser
 
 router = APIRouter(prefix="/api/v1/analytics", tags=["Аналитика"])
 
@@ -31,14 +31,14 @@ async def total_chats(
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
         end_date = datetime.strptime(end_date_str, "%Y-%m-%d") + timedelta(days=1)
 
-        filter_params["first_touch__gte"] = start_date
-        filter_params["first_touch__lte"] = end_date
+        filter_params["user__first_touch__gte"] = start_date
+        filter_params["user__first_touch__lte"] = end_date
 
     if disactive:
         now = datetime.now()
-        filter_params["last_activity__lte"] = now - timedelta(days=7)
+        filter_params["user__last_activity__lte"] = now - timedelta(days=7)
 
-    return await User.objects.filter(**filter_params).prefetch_related("worker").all()
+    return await WorkerUser.objects.filter(**filter_params).all()
 
 
 @router.get("/workers/conversion")
@@ -68,18 +68,17 @@ async def workers_conversion(
         worker_name=worker_name, **transition_params
     ).all()
     button_transitions = (
-        await User.objects.prefetch_related("worker")
+        await WorkerUser.objects
         .filter(
-            is_free_consulting=True,
-            worker__username__icontains=worker_name,
+            worker__user__username__icontains=worker_name,
             **filter_params
         )
         .all()
     )
     private_transitions = (
-        await User.objects.prefetch_related("worker")
+        await WorkerUser.objects
         .filter(
-            is_processing=True, worker__username__icontains=worker_name, **filter_params
+            worker__user__username__icontains=worker_name, **filter_params
         )
         .all()
     )

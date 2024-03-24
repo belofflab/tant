@@ -97,7 +97,7 @@ async def update_status(
     worker_request: schemas.WorkerRequestPatch,
 ) -> schemas.WorkerRequest:
     s_worker_request = await WorkerRequest.objects.get_or_none(id=worker_request.id)
-    s_worker = await Worker.objects.get(user__id=s_worker_request.worker)
+    s_worker = await Worker.objects.get(id=s_worker_request.worker)
     if not worker_request:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Заявка не найдена"

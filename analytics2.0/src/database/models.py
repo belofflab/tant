@@ -6,7 +6,7 @@ from enum import Enum
 from uuid import UUID, uuid4
 from ormar.fields.constraints import UniqueColumns
 from src.database.connection import database
-
+from typing import ForwardRef
 metadata = sqlalchemy.MetaData()
 
 
@@ -27,8 +27,9 @@ class User(ormar.Model):
   id: int = ormar.BigInteger(primary_key=True)
   username: str = ormar.String(max_length=255, nullable=True)
   full_name: str = ormar.String(max_length=255)
-  is_free_consulting: bool = ormar.Boolean(default=False)
-  is_processing: bool = ormar.Boolean(default=False)
+  is_active: bool = ormar.Boolean(default=True)
+  is_admin: bool = ormar.Boolean(default=False)
+  password: str = ormar.String(max_length=255, default="password realiztion")
   last_activity: datetime.datetime = ormar.DateTime(default=datetime.datetime.now, index=True) 
   first_touch: datetime.datetime = ormar.DateTime(default=datetime.datetime.now, index=True)
 
@@ -57,7 +58,6 @@ class Worker(ormar.Model):
   comission: int = ormar.Integer(default=50, maximum=100, minimum=10)
   is_active: bool = ormar.Boolean(default=True)
 
-
 class WorkerConnection(ormar.Model):
   class Meta(BaseMeta):
     tablename="worker_connections"
@@ -80,6 +80,12 @@ class Bot(ormar.Model):
 
   id: int = ormar.BigInteger(primary_key=True)
   uid: UUID = ormar.UUID(default=uuid4, unique=True)
+  main_photo: str = ormar.String(max_length=1024)
+  main_description: str = ormar.String(max_length=200)
+  service_photo: str = ormar.String(max_length=1024, nullable=True)
+  service_description: str = ormar.String(max_length=255, default="Чтобы узнать подробнее о каждом виде консультации, нажмите на соответствующую кнопку 👇")
+  free_consulting_photo: str = ormar.String(max_length=1024, nullable=True)
+  free_consulting_description: str = ormar.String(max_length=200, default="Описание")
 
 class BotWorker(ormar.Model):
   class Meta(BaseMeta):
@@ -96,6 +102,33 @@ class BotUser(ormar.Model):
   id: int = ormar.BigInteger(primary_key=True)
   bot = ormar.ForeignKey(Bot)
   user: User = ormar.ForeignKey(User)
+  last_activity: datetime.datetime = ormar.DateTime(default=datetime.datetime.now, index=True) 
+  first_touch: datetime.datetime = ormar.DateTime(default=datetime.datetime.now, index=True)
+
+# Услуги
+  
+CategoryRef = ForwardRef("Category")
+class Category(ormar.Model):
+  class Meta(BaseMeta):
+    tablename="taro_categories"
+  id: int = ormar.BigInteger(primary_key=True)
+  bot: Bot = ormar.ForeignKey(Bot, ondelete="CASCADE")
+  name: str = ormar.String(max_length=255)
+  photo: str = ormar.String(max_length=1024, nullable=True)
+  parent = ormar.ForeignKey(CategoryRef, nullable=True)
+  is_active = ormar.Boolean(default=True)
+Category.update_forward_refs()
+
+
+class Service(ormar.Model):
+  class Meta(BaseMeta):
+    tablename="taro_services"
+  id: int = ormar.BigInteger(primary_key=True)
+  category: Category = ormar.ForeignKey(Category, nullable=True, ondelete="CASCADE")
+  bot: Bot = ormar.ForeignKey(Bot)
+  photo: str = ormar.String(max_length=1024, nullable=True, ondelete="CASCADE")
+  name: str = ormar.String(max_length=255)
+  description: str = ormar.String(max_length=255)
 
 
 # Таро система

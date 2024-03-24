@@ -107,3 +107,5 @@ async def disable_worker(worker: int):
         )
 
     return await s_worker.update(is_active=False)
+
+
