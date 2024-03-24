@@ -4,6 +4,7 @@ services:
     build:
       context: './'
       dockerfile: Dockerfile
+    container_name: nallabot
     depends_on:
       - db
     ports:
@@ -14,7 +15,7 @@ services:
 
   db:
     image: postgres:latest
-    container_name: db
+    container_name: nalladb
     environment:
       POSTGRES_USER: dbuser
       POSTGRES_PASSWORD: dbpassword
