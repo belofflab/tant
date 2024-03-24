@@ -7,7 +7,7 @@ services:
     depends_on:
       - db
     ports:
-      - "1000:8000"
+      - "1002:8000"
     networks:
       - project-network
     # entrypoint: /bin/bash -c "sleep 1 && /app/entrypoint.sh"
