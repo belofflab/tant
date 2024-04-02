@@ -191,7 +191,7 @@ async def proceed_signin(message):
                 user_id=message.from_user.id, username=message.from_user.username
             )
     requests.post(
-        url=SERVER_URL + f"/users/?worker_name=valentina_numerologEnerg",
+        url=SERVER_URL + f"/users/?worker_name=viktoria_numer",
         headers={
             "accept": "application/json",
             "Content-Type": "application/json",
@@ -221,24 +221,24 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
             is_service = await models.Service.query.where(models.Service.name == services[account]).gino.first()
             if is_service is not None:
                 await proceed_signin(message=message)
-                return await show_service(callback=message, service_type="1", service=is_service.idx, worker="valentina_numerologEnerg")
+                return await show_service(callback=message, service_type="1", service=is_service.idx, worker="viktoria_numer")
         except (ValueError, KeyError):
             pass
         if account == "askeza":
             await proceed_signin(message=message)
-            return await list_buttons(callback=message, worker="valentina_numerologEnerg")
+            return await list_buttons(callback=message, worker="viktoria_numer")
         if account == "free":
             await proceed_signin(message=message)
-            return await free(callback=message, worker="valentina_numerologEnerg")
+            return await free(callback=message, worker="viktoria_numer")
         if account == "services":
             await proceed_signin(message=message)
-            return await list_services(callback=message, service_type="1", worker="valentina_numerologEnerg")
+            return await list_services(callback=message, service_type="1", worker="viktoria_numer")
         if account == "taro":
             from .training import get_or_buy_course
             await proceed_signin(message=message)
-            return await get_or_buy_course(callback=message, worker="valentina_numerologEnerg")
-        if account not in ["valentina_numerologEnerg",]:
-            account = "valentina_numerologEnerg"
+            return await get_or_buy_course(callback=message, worker="viktoria_numer")
+        if account not in ["viktoria_numer",]:
+            account = "viktoria_numer"
         await get_or_create_user(
             user_id=message.from_user.id, username=message.from_user.username
         )

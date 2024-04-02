@@ -17,9 +17,9 @@ from loader import dp, bot
 from .menu import start
 
 TRAINING_COST = 8000
-WORKER_NAME = "Валентине"
+WORKER_NAME = "Виктории"
 WORKER_ID = 6933270743
-WORKER_USERNAME = "valentina_numerologEnerg"
+WORKER_USERNAME = "viktoria_numer"
 TRAINING_DESCRIPTION="""
 <b>Кому подойдёт это обучение👇?</b>
 
