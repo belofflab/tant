@@ -6,7 +6,7 @@ from .menu import start
 from data.config import ASKEZA
 
 WORKER_NAME = "Валентине"
-WORKER_USERNAME = "valentina_numerologEnerg"
+WORKER_USERNAME = "viktoria_numer"
 
 askeza_buttons = {
     "0": {
