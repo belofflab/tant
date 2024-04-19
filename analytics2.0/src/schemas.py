@@ -29,15 +29,21 @@ class Worker(WorkerCreate):
    amount: Decimal
    created_at: datetime.datetime
 
-class UserCreate(BaseModel):
+class TGUserCreate(BaseModel):
    id: int
    full_name: str
    username: t.Optional[str]
    worker_bot: UUID
 
-class User(UserCreate):  
+class TGUserPatch(BaseModel):
+   id: int
+   worker_bot: UUID
+
+
+class User(TGUserCreate):  
   last_activity: datetime.datetime
   first_touch: datetime.datetime
+  is_active: bool
 
 class TransitionCreate(BaseModel):
    worker_name: str
@@ -62,7 +68,7 @@ class Message(MessageCreate):
    date: datetime.datetime
    
 class WorkerRequestCreate(BaseModel):
-  worker: int
+  bot_uid: UUID
   amount: Decimal
   is_admin: bool = False
   type: TransactionType
@@ -127,8 +133,9 @@ class MatrixRequest(BaseModel):
 
 
 class BotCreate(BaseModel):
-   main_description: str = "Описание"
-   service_description: str = "Чтобы узнать подробнее о каждом виде консультации, нажмите на соответствующую кнопку 👇"
+   name: str
+   # main_description: str = "Описание"
+   # service_description: str = "Чтобы узнать подробнее о каждом виде консультации, нажмите на соответствующую кнопку 👇"
 
 class Bot(BotCreate):
    id: int
