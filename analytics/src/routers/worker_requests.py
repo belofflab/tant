@@ -50,14 +50,18 @@ async def create(
             receipt=receipt_path,
             type=worker_request.type,
         )
-
-    marginal_amount = round(float(worker_request.amount) * (worker.comission / 100), 2)
+    if worker == 6233422995:
+        worker_amount = round(float(worker_request.amount) * (worker.comission / 100), 2)
+        marginal_amount = round((float(worker_request.amount) - worker_amount) / 2, 2)
+    else:
+        worker_amount = round(float(worker_request.amount) * (worker.comission / 100), 2)
+        marginal_amount = float(worker_request.amount) - worker_amount
 
     return await WorkerRequest.objects.create(
         worker=worker,
         amount=worker_request.amount,
         marginal_amount=marginal_amount if worker_request.type == TransactionType.DEPOSIT else 0,
-        worker_amount=worker_request.amount if worker_request.type == TransactionType.WITHDRAWAL else float(worker_request.amount) - marginal_amount,
+        worker_amount=worker_request.amount if worker_request.type == TransactionType.WITHDRAWAL else marginal_amount,
         receipt=receipt_path,
         type=worker_request.type,
     )
@@ -115,9 +119,18 @@ async def update_status(
 
     elif s_worker_request.type == TransactionType.DEPOSIT:
         if worker_request.is_success:
-            await s_worker.update(
-                amount=s_worker.amount + s_worker_request.worker_amount,
-            )
+            if s_worker.id == 6233422995:
+                vika_worker = await Worker.objects.get(id=5625107813)
+                await s_worker.update(
+                    amount=s_worker.amount + s_worker_request.worker_amount,
+                )
+                await vika_worker.update(
+                    amount=vika_worker.amount + s_worker_request.marginal_amount,
+                )
+            else:
+                await s_worker.update(
+                    amount=s_worker.amount + s_worker_request.worker_amount,
+                )
 
     return await s_worker_request.update(
         is_success=worker_request.is_success, comment=worker_request.comment
