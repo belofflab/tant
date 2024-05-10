@@ -50,7 +50,7 @@ async def create(
             receipt=receipt_path,
             type=worker_request.type,
         )
-    if worker == 6233422995:
+    if worker.id == 6233422995:
         worker_amount = round(float(worker_request.amount) * (worker.comission / 100), 2)
         marginal_amount = round((float(worker_request.amount) - worker_amount) / 2, 2)
     else:
