@@ -11,23 +11,37 @@ SERVER_URL = "https://tant.belofflab.com/tragos/"
 WEB_APP_PORT = 6677
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
-cookies = {"qkeUJMPwIEAoCnaFfOruWBpyYsSTcZ":"bde7538c5cbc3366adb3d110ccd36209-1715583465-1715583459"}
+
+cookies = {
+    'sNdOIy': 'qkeUJMPwIEAoCnaFfOruWBpyYsSTcZ',
+    'cookie_id': '524409947cookie_id6641b9c8a0e04',
+    'host_name': 'tragos.ru',
+    '_ga': 'GA1.1.1249311112.1715583433',
+    '_ym_uid': '1715583276790850989',
+    '_ym_d': '1715583434',
+    '_ym_isad': '2',
+    '_ym_visorc': 'w',
+    'PHPSESSID': '575bf1152d54d87f6a4cf32e38f4dfba',
+    'qkeUJMPwIEAoCnaFfOruWBpyYsSTcZ': 'bde7538c5cbc3366adb3d110ccd36209-1715583465-1715583459',
+    '_ga_17NFE2NVJR': 'GS1.1.1715583433.1.1.1715583951.0.0.0',
+    'sNdOIy_hits': '31',
+}
 
 headers = {
-    "Accept": "*/*",
-    "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
-    "Connection": "keep-alive",
-    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    "Origin": "https://tragos.ru",
-    "Referer": "https://tragos.ru/alignment-for-the-year/?day=16&month=1&year=2007&age=",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "same-origin",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "X-Requested-With": "XMLHttpRequest",
-    "sec-ch-ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
+    'Accept': '*/*',
+    'Accept-Language': 'ru-RU,ru;q=0.9',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Origin': 'https://tragos.ru',
+    'Referer': 'https://tragos.ru/alignment-for-the-year/?day=4&month=6&year=2018&age=',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-origin',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+    'X-Requested-With': 'XMLHttpRequest',
+    'sec-ch-ua': '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"macOS"',
 }
 
 
@@ -110,4 +124,5 @@ async def on_startup(dp):
     await site.start()
 
 if __name__ == "__main__":
-    executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
+    # executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
+
