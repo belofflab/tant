@@ -11,6 +11,7 @@ SERVER_URL = "https://tant.belofflab.com/tragos/"
 WEB_APP_PORT = 6677
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
+cookies = {"qkeUJMPwIEAoCnaFfOruWBpyYsSTcZ":"bde7538c5cbc3366adb3d110ccd36209-1715583465-1715583459"}
 
 headers = {
     "Accept": "*/*",
@@ -41,7 +42,7 @@ async def get_astrology_report(date_of_birth: datetime, age: str = ""):
 
     async with aiohttp.ClientSession() as session:
         async with session.post(
-            "https://tragos.ru/tragos_ajax", headers=headers, data=data
+            "https://tragos.ru/tragos_ajax", headers=headers, data=data, cookies=cookies
         ) as response:
             html_content = await response.text()
 
