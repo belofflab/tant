@@ -90,7 +90,7 @@ async def handle_date(message: types.Message):
     if date_of_birth:
         birth_time = date_of_birth.group(2) if date_of_birth.group(2) else ""
         date_of_birth = datetime.strptime(date_of_birth.group(1), "%d.%m.%Y")
-        report_content = await get_astrology_report(date_of_birth, age=birth_time)
+        report_content = get_astrology_report(date_of_birth, age=birth_time)
 
         report_filename = f"media/{uuid.uuid4()}.html"
         with open(report_filename, "w", encoding="utf-8") as f:
