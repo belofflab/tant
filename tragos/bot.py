@@ -1,4 +1,5 @@
 import re
+import requests
 from datetime import datetime
 import uuid
 import aiohttp
@@ -32,6 +33,7 @@ headers = {
     'Accept-Language': 'ru-RU,ru;q=0.9',
     'Connection': 'keep-alive',
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    # 'Cookie': 'sNdOIy=qkeUJMPwIEAoCnaFfOruWBpyYsSTcZ; cookie_id=524409947cookie_id6641b9c8a0e04; host_name=tragos.ru; _ga=GA1.1.1249311112.1715583433; _ym_uid=1715583276790850989; _ym_d=1715583434; _ym_isad=2; _ym_visorc=w; PHPSESSID=575bf1152d54d87f6a4cf32e38f4dfba; qkeUJMPwIEAoCnaFfOruWBpyYsSTcZ=bde7538c5cbc3366adb3d110ccd36209-1715583465-1715583459; _ga_17NFE2NVJR=GS1.1.1715583433.1.1.1715583951.0.0.0; sNdOIy_hits=31',
     'Origin': 'https://tragos.ru',
     'Referer': 'https://tragos.ru/alignment-for-the-year/?day=4&month=6&year=2018&age=',
     'Sec-Fetch-Dest': 'empty',
@@ -44,8 +46,7 @@ headers = {
     'sec-ch-ua-platform': '"macOS"',
 }
 
-
-async def get_astrology_report(date_of_birth: datetime, age: str = ""):
+def get_astrology_report(date_of_birth: datetime, age: str = ""):
     data = {
         "task": "alignment-for-the-year",
         "day": date_of_birth.day,
@@ -53,34 +54,27 @@ async def get_astrology_report(date_of_birth: datetime, age: str = ""):
         "year": date_of_birth.year,
         "age": age,
     }
+    response = requests.post('https://tragos.ru/tragos_ajax', cookies=cookies, headers=headers, data=data)
+    soup = BeautifulSoup(response.text, "lxml")
+    style = soup.new_tag("style")
+    styles = open("./styles.css", "r").read()
+    style.string = styles
+    soup.insert(2, style)
+    soup.select_one("body > div").clear()
 
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-            "https://tragos.ru/tragos_ajax", headers=headers, data=data, cookies=cookies
-        ) as response:
-            html_content = await response.text()
+    for element in soup.select('img[src="/images/question.png"]'):
+        element.attrs.update({"src": "https://tragos.ru/images/question.png"})
 
-            soup = BeautifulSoup(html_content, "lxml")
-            style = soup.new_tag("style")
-            styles = open("./styles.css", "r").read()
-            style.string = styles
-            soup.insert(2, style)
-            soup.select_one("body > div").clear()
+    for element in soup.select("a"):
+        href = element.attrs.get("href")
+        if "#" in href:
+            continue
+        elif "https://tragos.ru/" in href or href.endswith(".html"):
+            element.attrs.clear()
 
-            for element in soup.select('img[src="/images/question.png"]'):
-                element.attrs.update({"src": "https://tragos.ru/images/question.png"})
+    soup.select("script").clear()
 
-            for element in soup.select("a"):
-                href = element.attrs.get("href")
-                if "#" in href:
-                    continue
-                elif "https://tragos.ru/" in href or href.endswith(".html"):
-                    element.attrs.clear()
-
-            soup.select("script").clear()
-
-            return str(soup)
-
+    return str(soup)
 
 @dp.message_handler(commands=["start"])
 async def start(message: types.Message):
