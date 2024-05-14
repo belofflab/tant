@@ -61,7 +61,7 @@ async def create(
         worker=worker,
         amount=worker_request.amount,
         marginal_amount=marginal_amount if worker_request.type == TransactionType.DEPOSIT else 0,
-        worker_amount=worker_request.amount if worker_request.type == TransactionType.WITHDRAWAL else marginal_amount,
+        worker_amount=worker_request.amount if worker_request.type == TransactionType.WITHDRAWAL else worker_amount,
         receipt=receipt_path,
         type=worker_request.type,
     )
