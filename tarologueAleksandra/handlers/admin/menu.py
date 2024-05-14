@@ -102,7 +102,7 @@ async def setup(message: types.Message) -> None:
 
 🙎‍♀️@{worker}
 """,
-            "amount": "1050",
+            "amount": "0",
         },
         {
             "name": "🌸Прогноз на год",
