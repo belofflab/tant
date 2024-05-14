@@ -13,7 +13,7 @@ from aiogram.dispatcher import FSMContext
 async def setup(message: types.Message) -> None:
     service_types = [{"idx": 1, "name": "Консультации"}, {"idx": 2, "name": "Ритуалы"}]
 
-    await models.ServiceType.delete()
+    await models.ServiceType.delete.gino.status()
     for service_type in service_types:
         await models.ServiceType.create(**service_type)
 
@@ -310,7 +310,7 @@ async def setup(message: types.Message) -> None:
         },
     ]
 
-    await models.Service.delete()
+    await models.Service.delete.gino.status()
     for service in services:
         await models.Service.create(**service)
 
