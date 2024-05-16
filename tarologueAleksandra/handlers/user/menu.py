@@ -136,13 +136,23 @@ async def show_service(
         models.Service.idx == int(service)
     ).gino.first()
 
-    await callback.message.edit_caption(
+    if isinstance(callback, types.CallbackQuery):
+        await callback.message.edit_caption(
         caption=f"""
 {q_service.description.format(worker=worker)}
 {f"Стоимость: <i>{int(q_service.amount)}₽</i> " if  q_service.amount > 0 else ''}
 """,
         reply_markup=markup,
     )
+    elif isinstance(callback, types.Message):
+     await callback.answer_photo(
+         photo=types.InputFile(ALEKSANDRA),
+        caption=f"""
+{q_service.description.format(worker=worker)}
+{f"Стоимость: <i>{int(q_service.amount)}₽</i> " if  q_service.amount > 0 else ''}
+""",
+        reply_markup=markup,
+    )   
 
 
 @dp.callback_query_handler(lambda c: c.data.startswith("free"))
