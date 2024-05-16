@@ -53,6 +53,16 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
     if isinstance(message, types.Message):
         from .askeza import list_buttons
         account = message.get_args()
+        try:
+            services = {
+                "1_2month": "Прогноз на 1 - 2 месяца",
+            }
+            is_service = await models.Service.query.where(models.Service.name == services[account]).gino.first()
+            if is_service is not None:
+                await proceed_signin(message=message)
+                return await show_service(callback=message, service_type="1", service=is_service.idx, worker="taro2_sashA")
+        except (ValueError, KeyError):
+            pass
         if account == "free":
             await proceed_signin(message=message)
             return await free(callback=message, worker="taro2_sashA")
