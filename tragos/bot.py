@@ -22,7 +22,7 @@ router = Router()
 
 def get_astrology_report(date_of_birth: datetime, age: str = ""):
     cookies = {
-        'sNdOIy': 'vGeRiXQqwWYEOfNKCgIUMLFZhymAsj',
+        'sNdOIy': 'tmnBfKRYHLkbGrZVOwWCePUJTzoapy',
         'cookie_id': '942390549cookie_id6650520954d63',
         'PHPSESSID': '7d8cf6bbfd4d276cd12926080c38ca57',
         'host_name': 'tragos.ru',
@@ -31,7 +31,7 @@ def get_astrology_report(date_of_birth: datetime, age: str = ""):
         '_ym_d': '1716539918',
         '_ym_visorc': 'b',
         '_ym_isad': '2',
-        'sNdOIy_hits': '51',
+        'sNdOIy_hits': '0',
         '_ga_17NFE2NVJR': 'GS1.1.1716539915.1.1.1716540312.0.0.0',
         'vGeRiXQqwWYEOfNKCgIUMLFZhymAsj': '8a55906024af2f3c065df216160412d6-1716540315-1716540313',
     }
