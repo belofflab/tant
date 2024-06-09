@@ -23,17 +23,17 @@ router = Router()
 def get_astrology_report(date_of_birth: datetime, age: str = ""):
     cookies = {
         'sNdOIy': 'tmnBfKRYHLkbGrZVOwWCePUJTzoapy',
-        'cookie_id': '942390549cookie_id6650520954d63',
-        'PHPSESSID': '7d8cf6bbfd4d276cd12926080c38ca57',
+        'cookie_id': '1178259313cookie_id663b27046e0d4',
+        '_ga': 'GA1.1.1894583234.1715152644',
+        '_ym_uid': '171515264486072643',
+        '_ym_d': '1715152648',
+        'tmnBfKRYHLkbGrZVOwWCePUJTzoapy': 'd724a0ee49f0102ff59e50a122fff576-1717950467-1717950463',
+        'PHPSESSID': '59fce89f782890ff839ecf98c46f8bcc',
         'host_name': 'tragos.ru',
-        '_ga': 'GA1.1.1257035839.1716539916',
-        '_ym_uid': '1716539918205245915',
-        '_ym_d': '1716539918',
-        '_ym_visorc': 'b',
         '_ym_isad': '2',
-        'sNdOIy_hits': '0',
-        '_ga_17NFE2NVJR': 'GS1.1.1716539915.1.1.1716540312.0.0.0',
-        'vGeRiXQqwWYEOfNKCgIUMLFZhymAsj': '8a55906024af2f3c065df216160412d6-1716540315-1716540313',
+        '_ym_visorc': 'w',
+        '_ga_17NFE2NVJR': 'GS1.1.1717950469.2.1.1717950678.0.0.0',
+        'sNdOIy_hits': '10',
     }
 
     headers = {
