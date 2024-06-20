@@ -314,6 +314,8 @@ async def show_service(
         whatsapp_button = "Заказать фин.Код"
     if q_service.name in ["5️⃣ Став денежный амулет", "7️⃣ Став «Помощь»"]:
         whatsapp_button = "Заказать став"
+    if q_service.name in ["1️⃣1️⃣ Денежная нейроформула", ]:
+        whatsapp_button = "заказать нейроформулу для расширения денежного потока за 550₽"
     markup.add(
         InlineKeyboardButton(
             text=whatsapp_button,
