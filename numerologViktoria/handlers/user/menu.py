@@ -223,8 +223,11 @@ async def start(message: Union[types.CallbackQuery, types.Message], **kwargs) ->
             services = {
                 "fincode": "6️⃣ Финансовый код",
                 "moncharm": "5️⃣ Став денежный амулет",
-                "energy": "🔟 Энергетическая отвязка",
-                "monform": "1️⃣1️⃣ Денежная нейроформула"
+                "energy": "9️⃣ Энергетическая отвязка",
+                "monform": "🔟 Денежная нейроформула",
+                "helsaf": "7️⃣ Став «Помощь»",
+                "onetwomon": "3️⃣ Прогноз на 1-2 месяца",
+                "fullprog": "4️⃣ Подробный прогноз на год"
             }
             # service_idx = int(account)
             is_service = await models.Service.query.where(models.Service.name == services[account]).gino.first()
